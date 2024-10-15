@@ -94,7 +94,7 @@ const PrizeWheel = () => {
   };
 
   return (
-    <Card className="w-full max-w-md mx-auto">
+    <Card className="w-full max-w-md mx-auto  ">
       <CardHeader className="text-center text-2xl font-bold">วงล้อสุ่มรางวัล</CardHeader>
       <CardContent>
         <div className="space-y-4">
