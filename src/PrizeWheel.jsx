@@ -122,11 +122,11 @@ const PrizeWheel = () => {
               ))}
             </ul>
           </div>
-          <div className="text-center font-bold">{result}</div>
+          <div className="text-center font-bold text-black">{result}</div>
           <Button 
             onClick={spin} 
             disabled={isGameOver || isSpinning}
-            className="w-full"
+            className="w-full  "
           >
             {isGameOver ? 'เกมจบแล้ว' : isSpinning ? 'กำลังหมุน...' : 'หมุน!'}
           </Button>
