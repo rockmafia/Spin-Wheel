@@ -85,7 +85,7 @@ const PrizeWheel = () => {
           ? { ...prize, count: prize.count - 1 }
           : prize
       ));
-      setResult(`คุณได้รับ ${selectedPrize.name}!`);
+      setResult(` ${selectedPrize.name}!`);
 
       if (remainingPrizes === 1 || elapsedTime >= totalTime) {
         setIsGameOver(true);
