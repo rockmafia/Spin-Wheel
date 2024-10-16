@@ -3,7 +3,6 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
-  
 }
 
 .logo {
@@ -42,14 +41,13 @@
   color: #888;
 }
 
-
 .wheel {
   border: 5px solid #ddd;
   border-radius: 50%;
   width: 300px;
   height: 300px;
   position: relative;
-
+  
 }
 
 .wheel .segment {
@@ -59,10 +57,9 @@
   background-color: #f1c40f;
   transform-origin: 100% 100%;
   clip-path: polygon(100% 0, 100% 100%, 0 100%);
- 
 }
 
-.modal{
+.modal {
   background-color: white;
   z-index: 1;
 }
