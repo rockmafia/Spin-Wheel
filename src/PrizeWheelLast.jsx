@@ -44,10 +44,10 @@ const WheelOfFortune = () => {
   const [totalSpins, setTotalSpins] = useState(0);
 
   const spinSound = useRef(null);
-  const [isSoundLoaded, setIsSoundLoaded] = useState(false);
+  const [isSoundLoaded, setIsSoundLoaded] = useState(true);
 
   useEffect(() => {
-    spinSound.current = new Audio('./spin-sound.mp3');
+    spinSound.current = new Audio('./spin-232536.wav');
     spinSound.current.addEventListener('canplaythrough', () => setIsSoundLoaded(true));
     spinSound.current.addEventListener('error', (e) => console.error('Error loading sound:', e));
 
