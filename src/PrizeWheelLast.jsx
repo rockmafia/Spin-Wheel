@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Play } from 'lucide-react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { Play, Star } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import Sound from '../public/spin-232536.wav'
 const Confetti = ({ active }) => {
   if (!active) return null;
 
@@ -24,13 +25,12 @@ const Confetti = ({ active }) => {
 
 const WheelOfFortune = () => {
   const [prizes, setPrizes] = useState([
-    { name: 'บัตร Starbucks', count: 10, color: '#4361ee' },
+    { name: 'บัตร Starbucks', count: 25, color: '#4361ee' },
     { name: 'Gift Voucher Central 500 บาท', count: 3, color: '#7e31c4' },
     { name: 'เสียใจด้วยคุณไม่ได้รับรางวัล', count: Infinity, color: '#ea33f7' },
-    { name: 'บัตร Starbucks', count: 15, color: '#ff7900' },
     { name: 'เสียใจด้วยค่ะ พบกันปีหน้านะคะ', count: Infinity, color: '#fec514' },
     { name: 'Gift Voucher 1000 บาท', count: 2, color: '#add44f' },
-    { name: 'เสียใจด้วยคุณไม่ได้รับรางวัล', count: Infinity, color: '#6ac91d' },
+    { name: 'เสียใจด้วยคุณไม่ได้รับรางวัล', count: Infinity, color: '#6ac91d' }
   ]);
 
   const [spinsLeft, setSpinsLeft] = useState(50);
@@ -42,6 +42,31 @@ const WheelOfFortune = () => {
   const [spinResult, setSpinResult] = useState(null);
   const [showConfetti, setShowConfetti] = useState(false);
   const [totalSpins, setTotalSpins] = useState(0);
+
+  const spinSound = useRef(null);
+  const [isSoundLoaded, setIsSoundLoaded] = useState(false);
+
+  useEffect(() => {
+    spinSound.current = new Audio('./spin-sound.mp3');
+    spinSound.current.addEventListener('canplaythrough', () => setIsSoundLoaded(true));
+    spinSound.current.addEventListener('error', (e) => console.error('Error loading sound:', e));
+
+    return () => {
+      if (spinSound.current) {
+        spinSound.current.removeEventListener('canplaythrough', () => setIsSoundLoaded(true));
+        spinSound.current.removeEventListener('error', (e) => console.error('Error loading sound:', e));
+      }
+    };
+  }, []);
+
+  const playSpinSound = () => {
+    if (spinSound.current && isSoundLoaded) {
+      spinSound.current.currentTime = 0;
+      spinSound.current.play().catch(e => console.error('Error playing sound:', e));
+    } else {
+      console.warn('Spin sound not loaded yet');
+    }
+  };
 
   const getRandomPrizeIndex = useCallback(() => {
     const remainingPrizes = prizes.filter(prize => prize.count > 0 && prize.count !== Infinity);
@@ -87,6 +112,8 @@ const WheelOfFortune = () => {
     setSpinsLeft(prevSpins => prevSpins - 1);
     setTotalSpins(prevTotal => prevTotal + 1);
 
+    playSpinSound();
+
     const prizeIndex = getRandomPrizeIndex();
     const spinDegrees = 360 * 5 + (360 / prizes.length) * (prizes.length - prizeIndex);
     const newRotation = wheelRotation + spinDegrees;
@@ -101,6 +128,10 @@ const WheelOfFortune = () => {
       if (prizes[prizeIndex].count !== Infinity) {
         setShowConfetti(true);
         setTimeout(() => setShowConfetti(false), 5000);
+      }
+      if (spinSound.current) {
+        spinSound.current.pause();
+        spinSound.current.currentTime = 0;
       }
     }, 5000);
   }, [isSpinning, spinsLeft, getRandomPrizeIndex, prizes, wheelRotation, updatePrizeCounts, totalSpins]);
@@ -191,7 +222,7 @@ const WheelOfFortune = () => {
                 x={textX}
                 y={textY}
                 fill="white"
-                fontSize="18"
+                fontSize="20"
                 fontWeight="bold"
                 textAnchor="middle"
                 dominantBaseline="middle"
@@ -204,6 +235,7 @@ const WheelOfFortune = () => {
         })}
       </g>
       <circle cx="250" cy="250" r="15" fill="white" stroke="#333" strokeWidth="2" />
+      <Star x="30" y="30" size={40} fill="#FFD700" stroke="#FFD700" />
     </svg>
   );
 
@@ -236,7 +268,7 @@ const WheelOfFortune = () => {
         <div className="absolute inset-0 bg-grid-pattern"></div>
       </div>
       <div className="relative z-10 flex flex-col items-center justify-center">
-        <h1 className="text-4xl font-bold mb-6 text-white shadow-text">Lucky Spin Wheel</h1>
+        <h1 className="text-4xl font-bold mb-6 text-white shadow-text">วงล้อแห่งโชค</h1>
         <div className="relative">
           <WheelSVG />
           <button
@@ -266,14 +298,23 @@ const WheelOfFortune = () => {
           <p>จำนวนครั้งที่หมุนได้: {spinsLeft}</p>
           <p>จำนวนการหมุนทั้งหมด: {totalSpins}</p>
         </div>
-        <div className="mt-4 text-white text-lg">
-          <h2 className="font-bold">จำนวนรางวัลที่เหลือ:</h2>
-          {prizes.map((prize, index) => (
-            prize.count !== Infinity && (
-              <p key={index}>{prize.name}: {prize.count}</p>
-            )
-          ))}
-        </div>
+        <Card className="mt-4 w-full max-w-md mx-auto">
+          <CardHeader className="text-center">
+            <h2 className="text-2xl font-bold">จำนวนรางวัลที่เหลือ</h2>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-wrap justify-center items-center gap-4">
+              {prizes.map((prize, index) => (
+                prize.count !== Infinity && (
+                  <div key={index} className="flex items-center space-x-2">
+                    <span>{prize.name}:</span>
+                    <span className="font-bold">{prize.count}</span>
+                  </div>
+                )
+              ))}
+            </div>
+          </CardContent>
+        </Card>
       </div>
       {spinResult && (
         <Dialog open={showResultPopup} onOpenChange={() => setShowResultPopup(false)}>
