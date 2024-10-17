@@ -236,7 +236,7 @@ const WheelOfFortune = () => {
         <div className="absolute inset-0 bg-grid-pattern"></div>
       </div>
       <div className="relative z-10 flex flex-col items-center justify-center">
-        <h1 className="text-4xl font-bold mb-6 text-white shadow-text">วงล้อแห่งโชค</h1>
+        <h1 className="text-4xl font-bold mb-6 text-white shadow-text">Lucky Spin Wheel</h1>
         <div className="relative">
           <WheelSVG />
           <button
