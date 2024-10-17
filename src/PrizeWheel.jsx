@@ -1,165 +1,235 @@
-import React, { useState, useEffect, useRef } from "react";
-import Button from "./components/ui/Button";
-import { Card, CardHeader, CardContent } from "./components/ui/card";
+import React, { useState, useEffect, useCallback } from 'react';
+import { AlertCircle, Play } from 'lucide-react';
+// import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+// import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
-const PrizeWheel = () => {
+const WheelOfFortune = () => {
   const [prizes, setPrizes] = useState([
-    { name: "บัตร Starbucks", count: 25, color: "#006241" },
-    { name: "Gift Voucher Central 500 บาท", count: 3, color: "#e11837" },
-    { name: "Gift Voucher 1000 บาท", count: 2, color: "#ffc72c" },
-    { name: "เสียใจด้วยคุณไม่ได้รับรางวัล", count: Infinity, color: "#808080" },
+    { name: 'Gift Voucher 1000 บาท', count: 2, color: '#FF5C5C' },
+    { name: 'บัตร Starbucks', count: 10, color: '#5EE65E' },
+    { name: 'บัตร Starbucks', count: 10, color: '#B0E0E6' },
+    { name: 'Gift Voucher', count: 3, color: '#FFA500' },
+    { name: 'เสียใจด้วยค่ะ', count: 5, color: '#8A2BE2' },
+    { name: 'เสียใจด้วยค่ะ คุณไม่ได้...', count: 10, color: '#4169E1' },
+    { name: 'เสียใจด้วยค่ะ มีโอกาส...', count: 10, color: '#FF69B4' },
   ]);
-  const [spins, setSpins] = useState(0);
-  const [startTime, setStartTime] = useState(null);
-  const [elapsedTime, setElapsedTime] = useState(0);
-  const [result, setResult] = useState("");
-  const [isGameOver, setIsGameOver] = useState(false);
+
+  const [spinsLeft, setSpinsLeft] = useState(20);
+  const [timeLeft, setTimeLeft] = useState(5 * 60);
   const [isSpinning, setIsSpinning] = useState(false);
-  const [lastPrizeTime, setLastPrizeTime] = useState(0);
+  const [result, setResult] = useState('');
   const [wheelRotation, setWheelRotation] = useState(0);
-  const wheelRef = useRef(null);
+  const [targetRotation, setTargetRotation] = useState(0);
+  const [showResultPopup, setShowResultPopup] = useState(false);
+  const [spinResult, setSpinResult] = useState(null);
+  const [currentPrizeIndex, setCurrentPrizeIndex] = useState(0);
 
-  const totalPrizes = prizes
-    .slice(0, 3)
-    .reduce((sum, prize) => sum + prize.count, 0);
-  const totalTime = 3 * 60 * 60 * 1000; // 3 hours in milliseconds
-
-  useEffect(() => {
-    let timer;
-    if (startTime && !isGameOver) {
-      timer = setInterval(() => {
-        const now = Date.now();
-        setElapsedTime(now - startTime);
-        if (now - startTime >= totalTime) {
-          setIsGameOver(true);
-          clearInterval(timer);
-        }
-      }, 1000);
+  const getRandomPrizeIndex = useCallback(() => {
+    const totalPrizes = prizes.reduce((sum, prize) => sum + prize.count, 0);
+    let random = Math.floor(Math.random() * totalPrizes);
+    for (let i = 0; i < prizes.length; i++) {
+      if (random < prizes[i].count) return i;
+      random -= prizes[i].count;
     }
-    return () => clearInterval(timer);
-  }, [startTime, isGameOver]);
+    return prizes.length - 1;
+  }, [prizes]);
+
+  const updatePrizeCounts = useCallback((chosenPrize) => {
+    setPrizes(prevPrizes => 
+      prevPrizes.map(prize => {
+        if (prize.name === chosenPrize.name && prize.count > 0) {
+          return { ...prize, count: prize.count - 1 };
+        }
+        return prize;
+      })
+    );
+  }, []);
 
   const spin = () => {
-    if (isGameOver || isSpinning) return;
+    if (spinsLeft > 0 && timeLeft > 0 && !isSpinning) {
+      setIsSpinning(true);
+      const prizeIndex = getRandomPrizeIndex();
+      const segmentAngle = 360 / prizes.length;
+      const targetRotation = 360 * 5 + (prizes.length - 1 - prizeIndex) * segmentAngle + Math.random() * segmentAngle;
+      setTargetRotation(prevRotation => prevRotation + targetRotation);
 
-    setIsSpinning(true);
-    if (!startTime) {
-      setStartTime(Date.now());
+      setTimeout(() => {
+        const chosenPrize = prizes[prizeIndex];
+        setResult(chosenPrize.name);
+        updatePrizeCounts(chosenPrize);
+        setSpinsLeft(prevSpins => prevSpins - 1);
+        setIsSpinning(false);
+        setCurrentPrizeIndex(prizeIndex);
+        setSpinResult(chosenPrize);
+        setShowResultPopup(true);
+      }, 5000);
     }
-
-    setSpins(spins + 1);
-
-    const remainingTime = Math.max(0, totalTime - elapsedTime);
-    const remainingPrizes = prizes
-      .slice(0, 3)
-      .reduce((sum, prize) => sum + prize.count, 0);
-
-    // Calculate probability of winning a prize
-    const timeSinceLastPrize = elapsedTime - lastPrizeTime;
-    const averageTimeBetweenPrizes = totalTime / totalPrizes;
-    let prizeProb = Math.min(1, timeSinceLastPrize / averageTimeBetweenPrizes);
-
-    // Adjust probability based on remaining prizes and time
-    prizeProb *= remainingPrizes / (totalPrizes * (remainingTime / totalTime));
-
-    let selectedPrize;
-    if (Math.random() < prizeProb && spins > 50) {
-      const availablePrizes = prizes.filter(
-        (prize) =>
-          prize.count > 0 && prize.name !== "เสียใจด้วยคุณไม่ได้รับรางวัล"
-      );
-      if (availablePrizes.length > 0) {
-        selectedPrize =
-          availablePrizes[Math.floor(Math.random() * availablePrizes.length)];
-        setLastPrizeTime(elapsedTime);
-      }
-    }
-
-    if (!selectedPrize) {
-      selectedPrize = prizes[prizes.length - 1]; // เสียใจด้วยคุณไม่ได้รับรางวัล
-    }
-
-    const prizeIndex = prizes.findIndex((p) => p.name === selectedPrize.name);
-    const newRotation =
-      wheelRotation +
-      360 * 5 +
-      (360 / prizes.length) * (prizes.length - prizeIndex);
-    setWheelRotation(newRotation);
-
-    wheelRef.current.style.transition =
-      "transform 5s cubic-bezier(0.25, 0.1, 0.25, 1)";
-    wheelRef.current.style.transform = `rotate(${newRotation}deg)`;
-
-    setTimeout(() => {
-      setIsSpinning(false);
-      setPrizes(
-        prizes.map((prize) =>
-          prize.name === selectedPrize.name && prize.count !== Infinity
-            ? { ...prize, count: prize.count - 1 }
-            : prize
-        )
-      );
-      setResult(` ${selectedPrize.name}!`);
-
-      if (remainingPrizes === 1 || elapsedTime >= totalTime) {
-        setIsGameOver(true);
-      }
-    }, 5000);
   };
 
+  useEffect(() => {
+    let animationFrameId;
+    
+    const animateRotation = () => {
+      if (wheelRotation < targetRotation) {
+        const newRotation = Math.min(wheelRotation + 10, targetRotation);
+        setWheelRotation(newRotation);
+        animationFrameId = requestAnimationFrame(animateRotation);
+      }
+    };
+
+    if (isSpinning) {
+      animationFrameId = requestAnimationFrame(animateRotation);
+    }
+
+    return () => {
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
+    };
+  }, [isSpinning, wheelRotation, targetRotation]);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft(prevTime => {
+        if (prevTime > 0) {
+          return prevTime - 1;
+        } else {
+          clearInterval(timer);
+          return 0;
+        }
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  const WheelSVG = () => (
+    <svg width="500" height="500" viewBox="0 0 500 500">
+      <defs>
+        <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
+          <feOffset dx="2" dy="2" result="offsetblur" />
+          <feComponentTransfer>
+            <feFuncA type="linear" slope="0.5" />
+          </feComponentTransfer>
+          <feMerge>
+            <feMergeNode />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
+      <g transform={`rotate(${wheelRotation} 250 250)`}>
+        {prizes.map((prize, index) => {
+          const angle = (index / prizes.length) * 360;
+          const nextAngle = ((index + 1) / prizes.length) * 360;
+          const midAngle = (angle + nextAngle) / 2;
+          const x1 = 250 + 230 * Math.cos((angle * Math.PI) / 180);
+          const y1 = 250 + 230 * Math.sin((angle * Math.PI) / 180);
+          const x2 = 250 + 230 * Math.cos((nextAngle * Math.PI) / 180);
+          const y2 = 250 + 230 * Math.sin((nextAngle * Math.PI) / 180);
+          const textRadius = 140;
+          const textX = 250 + textRadius * Math.cos((midAngle * Math.PI) / 180);
+          const textY = 250 + textRadius * Math.sin((midAngle * Math.PI) / 180);
+
+          return (
+            <g key={index}>
+              <path
+                d={`M250,250 L${x1},${y1} A230,230 0 0,1 ${x2},${y2} Z`}
+                fill={prize.color}
+                stroke="white"
+                strokeWidth="2"
+              />
+              <text
+                x={textX}
+                y={textY}
+                fill="white"
+                fontSize="14"
+                fontWeight="bold"
+                textAnchor="middle"
+                dominantBaseline="middle"
+                transform={`rotate(${midAngle} ${textX} ${textY})`}
+              >
+                {prize.name.length > 10 ? prize.name.slice(0, 10) + '...' : prize.name}
+              </text>
+            </g>
+          );
+        })}
+      </g>
+      <circle cx="250" cy="250" r="15" fill="white" stroke="#333" strokeWidth="2" />
+    </svg>
+  );
+
   return (
-    <Card className="w-full max-w-md mx-auto mt-8  ">
-      <CardHeader className="text-center text-2xl font-bold text-black">
-        วงล้อสุ่มรางวัล
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
-          <div className="relative w-64 h-64 mx-auto">
-            <div
-              ref={wheelRef}
-              className="w-full h-full rounded-full absolute"
-              style={{
-                background: `conic-gradient(${prizes
-                  .map(
-                    (prize, index) =>
-                      `${prize.color} 0deg ${
-                        (360 / prizes.length) * (index + 1)
-                      }deg`
-                  )
-                  .join(", ")})`,
-                transition: "transform 5s cubic-bezier(0.25, 0.1, 0.25, 1)",
-                transform: `rotate(${wheelRotation}deg)`,
-              }}
-            ></div>
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[20px] border-b-black"></div>
-          </div>
-          <div className="text-black">
-            เวลาที่เหลือ:{" "}
-            {Math.max(0, Math.floor((totalTime - elapsedTime) / 1000))} วินาที
-          </div>
-          <div className="text-black">จำนวนการหมุน: {spins}</div>
-          <div className="text-black">
-            รางวัลที่เหลือ:
-            <ul>
-              {prizes.slice(0, 3).map((prize, index) => (
-                <li key={index}>
-                  {prize.name}: {prize.count}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="text-center font-bold text-black">{result}</div>
-          <Button
+    <div className="min-h-screen bg-gradient-to-br from-purple-600 via-pink-500 to-red-500 p-4 overflow-hidden relative">
+      <div className="absolute inset-0 bg-white opacity-10">
+        <div className="absolute inset-0 bg-grid-pattern"></div>
+      </div>
+      <div className="relative z-10 flex flex-col items-center justify-center">
+        <h1 className="text-4xl font-bold mb-6 text-white shadow-text">วงล้อแห่งโชค</h1>
+        <div className="relative">
+          <WheelSVG />
+          <button
+            className={`
+              absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2
+              w-24 h-24 rounded-full flex items-center justify-center
+              text-white font-bold text-xl
+              transition-all duration-300 ease-in-out
+              ${isSpinning ? 'cursor-not-allowed opacity-70' : 'cursor-pointer hover:scale-105 active:scale-95'}
+            `}
+            style={{
+              background: 'linear-gradient(145deg, #3498db, #2980b9)',
+              boxShadow: `
+                0 0 0 8px rgba(255, 255, 255, 0.8),
+                0 0 0 10px rgba(59, 130, 246, 0.5),
+                0 4px 6px rgba(0, 0, 0, 0.3),
+                inset 0 2px 4px rgba(255, 255, 255, 0.5),
+                inset 0 -2px 4px rgba(0, 0, 0, 0.2)
+              `
+            }}
             onClick={spin}
-            disabled={isGameOver || isSpinning}
-            className="w-full  "
+            disabled={isSpinning}
           >
-            {isGameOver ? "เกมจบแล้ว" : isSpinning ? "กำลังหมุน..." : "หมุน!"}
-          </Button>
+            <Play className="w-16 h-16 drop-shadow-lg" />
+          </button>
         </div>
-      </CardContent>
-    </Card>
+        <div className="mt-8 text-center">
+          <p className="text-xl font-semibold text-white">เวลาที่เหลือ: {formatTime(timeLeft)}</p>
+          <p className="text-lg text-white mb-4">จำนวนการหมุนที่เหลือ: {spinsLeft}</p>
+          <div className="bg-white bg-opacity-90 rounded-lg p-4 shadow-lg inline-block">
+            <h2 className="text-lg font-bold mb-2">ตำแหน่งปัจจุบัน</h2>
+            <div className="text-sm">
+              <p>รางวัล: {prizes[currentPrizeIndex].name}</p>
+            </div>
+          </div>
+        </div>
+        <div className="mt-8 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {prizes.map((prize, index) => (
+            <div key={index} className="bg-white bg-opacity-90 p-4 rounded-lg shadow-md">
+              <p className="font-semibold">{prize.name}</p>
+              <p>เหลือ: {prize.count}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+      {spinResult && (
+        <Dialog open={showResultPopup} onOpenChange={() => setShowResultPopup(false)}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>{spinResult.name.includes('เสียใจ') ? 'เสียใจด้วย' : 'ยินดีด้วย!'}</DialogTitle>
+            </DialogHeader>
+            <p>{spinResult.name}</p>
+          </DialogContent>
+        </Dialog>
+      )}
+    </div>
   );
 };
 
-export default PrizeWheel;
+export default WheelOfFortune;
+
