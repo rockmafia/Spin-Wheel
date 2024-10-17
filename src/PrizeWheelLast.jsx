@@ -151,7 +151,7 @@ const WheelOfFortune = () => {
   };
 
   const WheelSVG = () => (
-    <svg width="480" height="480" viewBox="0 0 500 500">
+    <svg width="350" height="350" viewBox="0 0 500 500">
       <defs>
         <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
           <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
@@ -191,7 +191,7 @@ const WheelOfFortune = () => {
                 x={textX}
                 y={textY}
                 fill="white"
-                fontSize="16"
+                fontSize="18"
                 fontWeight="bold"
                 textAnchor="middle"
                 dominantBaseline="middle"
