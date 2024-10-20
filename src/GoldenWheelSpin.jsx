@@ -12,12 +12,12 @@ import {
 
 const initialPrizes = [
   { id: 1, label: 'ลุ้นรับทองคำ 1 บาท', count: 3, color: '#FFD700', textColor: '#000000' },
-  { id: 2, label: 'ไม่ได้รับรางวัล', count: Infinity, color: '#000000', textColor: '#f60101' },
+  { id: 2, label: 'ไม่ได้รับรางวัล', count: Infinity, color: '#f60101', textColor: '#f60101' },
   { id: 3, label: 'ลุ้นรับทองคำ 1 บาท', count: 2, color: '#FFD700', textColor: '#000000' },
   { id: 4, label: 'ลุ้นรับทองคำ 1 บาท', count: 2, color: '#FFD700', textColor: '#000000' },
-  { id: 5, label: 'พบกันปีหน้า', count: Infinity, color: '#000000', textColor: '#f60101' },
+  { id: 5, label: 'พบกันปีหน้า', count: Infinity, color: '#f60101', textColor: '#f60101' },
   { id: 6, label: 'ลุ้นรับทองคำ 1 บาท', count: 3, color: '#FFD700', textColor: '#000000' },
-  { id: 7, label: 'ไม่ได้รับรางวัล', count: Infinity, color: '#000000', textColor: '#f60101' },
+  { id: 7, label: 'ไม่ได้รับรางวัล', count: Infinity, color: '#f60101', textColor: '#f60101' },
 ];
 
 const TOTAL_SPINS = 30;
@@ -251,7 +251,7 @@ const LuckyWheel = () => {
         >
           <Coins size={72} />
         </button>
-        <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-[20px] border-l-transparent border-r-[20px] border-r-transparent border-b-[40px] border-b-yellow-400"></div>
+        {/* <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-[20px] border-l-transparent border-r-[20px] border-r-transparent border-b-[40px] border-b-yellow-400"></div> */}
       </div>
       <div className="mt-4 text-center bg-white p-4 rounded-lg shadow-lg w-full max-w-md">
         <p className="text-lg font-bold mb-2">เวลาที่เหลือ: {Math.floor(timeLeft / 3600)}:{Math.floor((timeLeft % 3600) / 60)}:{timeLeft % 60}</p>
