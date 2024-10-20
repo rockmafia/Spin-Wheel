@@ -226,6 +226,7 @@ const WheelOfFortune = () => {
                 textAnchor="middle"
                 dominantBaseline="middle"
                 transform={`rotate(${midAngle} ${textX} ${textY})`}
+                
               >
                 {prize.name.length > 15 ? prize.name.slice(0, 15) + '...' : prize.name}
               </text>
