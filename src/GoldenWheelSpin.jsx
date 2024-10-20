@@ -248,7 +248,7 @@ const LuckyWheel = () => {
         <button
           onClick={spin}
           disabled={spinning || isGameOver}
-          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-yellow-500 hover:bg-yellow-400 text-white p-3 rounded-full z-30 shadow-4xl transition-all duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
+          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-yellow-200 hover:bg-yellow-400 text-white p-3 rounded-full z-30 shadow-4xl transition-all duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <img src={Gold} style={{width:"72px", height:"72px"}} />
         </button>
