@@ -234,12 +234,12 @@ const WheelOfFortune = () => {
         })}
       </g>
       <circle cx="250" cy="250" r="15" fill="white" stroke="#333" strokeWidth="2" />
-      <Star x="30" y="30" size={40} fill="#FFD700" stroke="#FFD700" />
+      
     </svg>
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-600 via-pink-500 to-red-500 p-4 overflow-hidden relative">
+    <div className="min-h-screen bg-violet-600 p-4 overflow-hidden relative">
       <style jsx>{`
         .confetti-container {
           position: fixed;
@@ -267,7 +267,7 @@ const WheelOfFortune = () => {
         <div className="absolute inset-0 bg-grid-pattern"></div>
       </div>
       <div className="relative z-10 flex flex-col items-center justify-center">
-        <h1 className="text-4xl font-bold mb-6 text-white shadow-text">วงล้อแห่งโชค</h1>
+        <h1 className="text-4xl font-bold mb-6 text-white shadow-text">Lucky Spin Wheel</h1>
         <div className="relative">
           <WheelSVG />
           <button
