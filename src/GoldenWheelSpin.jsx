@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Coins } from 'lucide-react';
+import { Gem } from 'lucide-react';
+import Gold from "../src/assets/gold.png"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -247,9 +248,9 @@ const LuckyWheel = () => {
         <button
           onClick={spin}
           disabled={spinning || isGameOver}
-          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-yellow-500 hover:bg-yellow-400 text-white p-3 rounded-full z-30 shadow-md transition-all duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
+          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-yellow-500 hover:bg-yellow-400 text-white p-3 rounded-full z-30 shadow-4xl transition-all duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          <Coins size={72} />
+          <img src={Gold} style={{width:"72px", height:"72px"}} />
         </button>
         {/* <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-[20px] border-l-transparent border-r-[20px] border-r-transparent border-b-[40px] border-b-yellow-400"></div> */}
       </div>
