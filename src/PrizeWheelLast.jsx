@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import  { useState, useEffect, useCallback, useRef } from 'react';
 import { Play, Star } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
-import Sound from '../public/spin-232536.wav'
 const Confetti = ({ active }) => {
   if (!active) return null;
 
