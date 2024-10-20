@@ -223,7 +223,7 @@ const LuckyWheel = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-red-600 p-4">
       {showConfetti && <Confetti />}
-      <h1 style={{marginBottom:"48px" ,color:"white" , fontWeight:"bold"}}>Spin For Gold</h1>
+      <h1 style={{marginBottom:"48px" ,color:"white" , fontWeight:"bold" , fontSize:"40px"}}>Spin For Gold</h1>
       <div className="relative w-96 h-96 mb-8">
         <div className="absolute inset-0 rounded-full bg-red-700"></div>
         <div 
