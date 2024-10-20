@@ -12,12 +12,12 @@ import {
 
 const initialPrizes = [
   { id: 1, label: 'ลุ้นรับทองคำ 1 บาท', count: 3, color: '#FFD700', textColor: '#000000' },
-  { id: 2, label: 'ไม่ได้รับรางวัล', count: Infinity, color: '#000000', textColor: '#FFFFFF' },
+  { id: 2, label: 'ไม่ได้รับรางวัล', count: Infinity, color: '#000000', textColor: '#f60101' },
   { id: 3, label: 'ลุ้นรับทองคำ 1 บาท', count: 2, color: '#FFD700', textColor: '#000000' },
   { id: 4, label: 'ลุ้นรับทองคำ 1 บาท', count: 2, color: '#FFD700', textColor: '#000000' },
-  { id: 5, label: 'พบกันปีหน้า', count: Infinity, color: '#000000', textColor: '#FFFFFF' },
+  { id: 5, label: 'พบกันปีหน้า', count: Infinity, color: '#000000', textColor: '#f60101' },
   { id: 6, label: 'ลุ้นรับทองคำ 1 บาท', count: 3, color: '#FFD700', textColor: '#000000' },
-  { id: 7, label: 'ไม่ได้รับรางวัล', count: Infinity, color: '#000000', textColor: '#FFFFFF' },
+  { id: 7, label: 'ไม่ได้รับรางวัล', count: Infinity, color: '#000000', textColor: '#f60101' },
 ];
 
 const TOTAL_SPINS = 30;
@@ -203,11 +203,11 @@ const LuckyWheel = () => {
             style={{ backgroundColor: prize.color }}
           ></div>
           <div 
-            className="absolute top-8 left-1/2 -translate-x-1/2 text-xs text-center transform -rotate-90 origin-bottom font-bold whitespace-nowrap p-1 rounded "
+            className="absolute top-8 left-1/2 -translate-x-1/2 text-sm text-center transform -rotate-90 origin-bottom font-bold whitespace-nowrap p-1 rounded "
             style={{ 
               color: prize.textColor,
-              backgroundColor: prize.color,
-              textShadow: prize.textColor === '#000000' ? '1px 1px 2px rgba(255,255,255,0.5)' : '1px 1px 2px rgba(0,0,0,0.5)'
+    
+              textShadow: prize.textColor === '#000000' ? '1px 1px 2px rgba(13, 12, 12, 0.5)' : '1px 1px 2px rgba(0,0,0,0.5)'
             }}
           >
             {prize.label}
@@ -249,7 +249,7 @@ const LuckyWheel = () => {
           disabled={spinning || isGameOver}
           className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-yellow-500 hover:bg-yellow-400 text-white p-3 rounded-full z-30 shadow-md transition-all duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          <Coins size={24} />
+          <Coins size={72} />
         </button>
         <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-[20px] border-l-transparent border-r-[20px] border-r-transparent border-b-[40px] border-b-yellow-400"></div>
       </div>
