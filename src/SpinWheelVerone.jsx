@@ -1,5 +1,24 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { AlertDialog, AlertDialogAction, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+const Confetti = ({ active }) => {
+  if (!active) return null;
+
+  return (
+    <div className="confetti-container">
+      {[...Array(50)].map((_, i) => (
+        <div 
+          key={i} 
+          className="confetti" 
+          style={{
+            left: `${Math.random() * 100}%`,
+            animationDelay: `${Math.random() * 3}s`,
+            backgroundColor: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff'][Math.floor(Math.random() * 5)]
+          }}
+        />
+      ))}
+    </div>
+  );
+};
 
 export default function SpinningWheelGame() {
   const [spinning, setSpinning] = useState(false);
@@ -19,6 +38,7 @@ export default function SpinningWheelGame() {
   const [timeRemaining, setTimeRemaining] = useState(6 * 60 * 60);
   const [gameOver, setGameOver] = useState(false);
   const [showResult, setShowResult] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
   const [distributedPrizes, setDistributedPrizes] = useState({
     starbucks25: 0,
     starbucks10: 0,
@@ -103,6 +123,8 @@ export default function SpinningWheelGame() {
       setSpinning(false);
       setShowResult(true);
       if (prizes[selectedIndex].count !== Infinity) {
+        setShowConfetti(true);
+        setTimeout(() => setShowConfetti(false), 5000);
         setPrizes(prevPrizes => 
           prevPrizes.map((prize, index) => 
             index === selectedIndex ? { ...prize, count: prize.count - 1 } : prize
@@ -134,6 +156,29 @@ export default function SpinningWheelGame() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-white p-4">
+<style jsx>{`
+        .confetti-container {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          pointer-events: none;
+          z-index: 1000;
+        }
+        .confetti {
+          position: absolute;
+          width: 10px;
+          height: 10px;
+          opacity: 0;
+          animation: fall 3s linear infinite;
+        }
+        @keyframes fall {
+          0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+          100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+      `}</style>
+      <Confetti active={showConfetti} />
       <h1 className="text-3xl font-bold mb-4">เกมส์วงล้อเสี่ยงโชค</h1>
       <div className="mb-4 relative" style={{ width: '400px', height: '400px' }}>
         <svg width="400" height="400" viewBox="0 0 400 400">
