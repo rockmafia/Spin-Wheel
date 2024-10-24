@@ -272,6 +272,8 @@ export default function SpinningWheelGame() {
         <h2 className="text-3xl   font-poppins font-bold" style={{color:"#56AD36"}}>
            BJ Lucky Spin Wheel Game 
         </h2>
+       
+
       </div>
       <div className="text-lg mb-4">จำนวนการหมุน: {spins}</div>
       <div className="mb-4 relative" style={{ width: '400px', height: '400px' }}>
@@ -372,7 +374,7 @@ export default function SpinningWheelGame() {
             <circle cx="200" cy="200" r="35" fill="#FFFFFF" />
             <foreignObject x="170" y="170" width="60" height="60">
               <div className="h-full w-full flex items-center justify-center">
-                <Coins 
+                <Coins onClick={playSpinSound}
                   className={`w-8 h-8 ${spinning ? 'animate-spin' : ''}`} 
                   color={gameOver ? '#666666' : '#FFD700'} 
                 />
