@@ -16,14 +16,17 @@ const Confetti = ({ active }) => {
             left: `${Math.random() * 100}%`,
             animationDelay: `${Math.random() * 3}s`,
             backgroundColor: [
-              "#ff0000",
-              "#00ff00",
-              "#0000ff",
-              "#ffff00",
-              "#ff00ff",
+              
             ][Math.floor(Math.random() * 5)],
+            // backgroundColor: [
+            //   "#ff0000",
+            //   "#00ff00",
+            //   "#0000ff",
+            //   "#ffff00",
+            //   "#ff00ff",
+            // ][Math.floor(Math.random() * 5)]
           }}
-        />
+        > 🥇</div>
       ))}
     </div>
   );
