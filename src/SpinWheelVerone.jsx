@@ -269,7 +269,7 @@ export default function SpinningWheelGame() {
         }}>
           IN-COSMETICS ASIA 2024
         </h1> */}
-        <h2 className="text-3xl   font-poppins font-bold" style={{color:"#56AD36"}}>
+        <h2 className="text-3xl   font-serif font-bold" style={{color:"#56AD36"}}>
            BJ Lucky Spin Wheel Game 
         </h2>
        

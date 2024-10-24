@@ -17,8 +17,11 @@ module.exports = {
   		}
   	},
 	  fontFamily: {
-		poppins: ['Poppins', 'sans-serif'],
-        nanum: ['Nanum Gothic', 'sans-serif'],
+		'sans': ['ui-sans-serif', 'system-ui'],
+		'serif': ['ui-serif', 'Georgia'],
+		'mono': ['ui-monospace', 'SFMono-Regular'],
+		'display': ['Oswald'],
+		'body': ['"Open Sans"'],
 	  },
   	extend: {
   		keyframes: {
