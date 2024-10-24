@@ -10,10 +10,12 @@ import './index.css'
 createRoot(document.getElementById('root')).render(
   <StrictMode >
     {/* <App /> */}
-   
-    <SpinWheelVerone/> 
+   <div className='display-wheel'>
+   <SpinWheelVerone/> 
     {/* <PrizeWheelLast/> */}
     <GoldenWheelSpin/>
+   </div>
+    
    
   </StrictMode>,
 )

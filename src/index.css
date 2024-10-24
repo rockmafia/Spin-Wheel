@@ -15,6 +15,7 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+ 
 }
 
 a {
@@ -127,5 +128,20 @@ button:focus-visible {
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+
+.display-wheel{
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+
+
+@media screen and (max-width: 800px) {
+  .display-wheel{
+    display: flex;
+    flex-direction: column;
   }
 }
