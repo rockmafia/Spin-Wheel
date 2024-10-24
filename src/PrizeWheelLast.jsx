@@ -1,6 +1,11 @@
-import  { useState, useEffect, useCallback, useRef } from 'react';
-import { Play, Star } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { Play, Star } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 const Confetti = ({ active }) => {
   if (!active) return null;
@@ -8,13 +13,19 @@ const Confetti = ({ active }) => {
   return (
     <div className="confetti-container">
       {[...Array(50)].map((_, i) => (
-        <div 
-          key={i} 
-          className="confetti" 
+        <div
+          key={i}
+          className="confetti"
           style={{
             left: `${Math.random() * 100}%`,
             animationDelay: `${Math.random() * 3}s`,
-            backgroundColor: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff'][Math.floor(Math.random() * 5)]
+            backgroundColor: [
+              "#ff0000",
+              "#00ff00",
+              "#0000ff",
+              "#ffff00",
+              "#ff00ff",
+            ][Math.floor(Math.random() * 5)],
           }}
         />
       ))}
@@ -24,12 +35,16 @@ const Confetti = ({ active }) => {
 
 const WheelOfFortune = () => {
   const [prizes, setPrizes] = useState([
-    { name: 'บัตร Starbucks', count: 25, color: '#4361ee' },
-    { name: 'Gift Voucher Central 500 บาท', count: 3, color: '#7e31c4' },
-    { name: 'เสียใจด้วยคุณไม่ได้รับรางวัล', count: Infinity, color: '#ea33f7' },
-    { name: 'เสียใจด้วยค่ะ พบกันปีหน้านะคะ', count: Infinity, color: '#fec514' },
-    { name: 'Gift Voucher 1000 บาท', count: 2, color: '#add44f' },
-    { name: 'เสียใจด้วยคุณไม่ได้รับรางวัล', count: Infinity, color: '#6ac91d' }
+    { name: "บัตร Starbucks", count: 25, color: "#4361ee" },
+    { name: "Gift Voucher Central 500 บาท", count: 3, color: "#7e31c4" },
+    { name: "เสียใจด้วยคุณไม่ได้รับรางวัล", count: Infinity, color: "#ea33f7" },
+    {
+      name: "เสียใจด้วยค่ะ พบกันปีหน้านะคะ",
+      count: Infinity,
+      color: "#fec514",
+    },
+    { name: "Gift Voucher 1000 บาท", count: 2, color: "#add44f" },
+    { name: "เสียใจด้วยคุณไม่ได้รับรางวัล", count: Infinity, color: "#6ac91d" },
   ]);
 
   const [spinsLeft, setSpinsLeft] = useState(50);
@@ -46,14 +61,22 @@ const WheelOfFortune = () => {
   const [isSoundLoaded, setIsSoundLoaded] = useState(true);
 
   useEffect(() => {
-    spinSound.current = new Audio('./spin-232536.wav');
-    spinSound.current.addEventListener('canplaythrough', () => setIsSoundLoaded(true));
-    spinSound.current.addEventListener('error', (e) => console.error('Error loading sound:', e));
+    spinSound.current = new Audio("./spin-232536.wav");
+    spinSound.current.addEventListener("canplaythrough", () =>
+      setIsSoundLoaded(true)
+    );
+    spinSound.current.addEventListener("error", (e) =>
+      console.error("Error loading sound:", e)
+    );
 
     return () => {
       if (spinSound.current) {
-        spinSound.current.removeEventListener('canplaythrough', () => setIsSoundLoaded(true));
-        spinSound.current.removeEventListener('error', (e) => console.error('Error loading sound:', e));
+        spinSound.current.removeEventListener("canplaythrough", () =>
+          setIsSoundLoaded(true)
+        );
+        spinSound.current.removeEventListener("error", (e) =>
+          console.error("Error loading sound:", e)
+        );
       }
     };
   }, []);
@@ -61,21 +84,29 @@ const WheelOfFortune = () => {
   const playSpinSound = () => {
     if (spinSound.current && isSoundLoaded) {
       spinSound.current.currentTime = 0;
-      spinSound.current.play().catch(e => console.error('Error playing sound:', e));
+      spinSound.current
+        .play()
+        .catch((e) => console.error("Error playing sound:", e));
     } else {
-      console.warn('Spin sound not loaded yet');
+      console.warn("Spin sound not loaded yet");
     }
   };
 
   const getRandomPrizeIndex = useCallback(() => {
-    const remainingPrizes = prizes.filter(prize => prize.count > 0 && prize.count !== Infinity);
-    const totalRemainingCount = remainingPrizes.reduce((sum, prize) => sum + prize.count, 0);
+    const remainingPrizes = prizes.filter(
+      (prize) => prize.count > 0 && prize.count !== Infinity
+    );
+    const totalRemainingCount = remainingPrizes.reduce(
+      (sum, prize) => sum + prize.count,
+      0
+    );
     const remainingSpins = 50 - totalSpins;
 
     if (remainingSpins <= totalRemainingCount) {
       // Increase chances of winning as we approach the end
-      const winningPrize = remainingPrizes[Math.floor(Math.random() * remainingPrizes.length)];
-      return prizes.findIndex(prize => prize.name === winningPrize.name);
+      const winningPrize =
+        remainingPrizes[Math.floor(Math.random() * remainingPrizes.length)];
+      return prizes.findIndex((prize) => prize.name === winningPrize.name);
     }
 
     let randomNum = Math.random();
@@ -91,14 +122,17 @@ const WheelOfFortune = () => {
         }
       }
     }
-    return prizes.findIndex(prize => prize.count === Infinity); // Default to a non-prize slot
+    return prizes.findIndex((prize) => prize.count === Infinity); // Default to a non-prize slot
   }, [prizes, totalSpins]);
 
   const updatePrizeCounts = useCallback((index) => {
-    setPrizes(prevPrizes => {
+    setPrizes((prevPrizes) => {
       const newPrizes = [...prevPrizes];
       if (newPrizes[index].count !== Infinity && newPrizes[index].count > 0) {
-        newPrizes[index] = { ...newPrizes[index], count: newPrizes[index].count - 1 };
+        newPrizes[index] = {
+          ...newPrizes[index],
+          count: newPrizes[index].count - 1,
+        };
       }
       return newPrizes;
     });
@@ -108,13 +142,14 @@ const WheelOfFortune = () => {
     if (isSpinning || spinsLeft <= 0) return;
 
     setIsSpinning(true);
-    setSpinsLeft(prevSpins => prevSpins - 1);
-    setTotalSpins(prevTotal => prevTotal + 1);
+    setSpinsLeft((prevSpins) => prevSpins - 1);
+    setTotalSpins((prevTotal) => prevTotal + 1);
 
     playSpinSound();
 
     const prizeIndex = getRandomPrizeIndex();
-    const spinDegrees = 360 * 5 + (360 / prizes.length) * (prizes.length - prizeIndex);
+    const spinDegrees =
+      360 * 5 + (360 / prizes.length) * (prizes.length - prizeIndex);
     const newRotation = wheelRotation + spinDegrees;
 
     setTargetRotation(newRotation);
@@ -133,12 +168,20 @@ const WheelOfFortune = () => {
         spinSound.current.currentTime = 0;
       }
     }, 5000);
-  }, [isSpinning, spinsLeft, getRandomPrizeIndex, prizes, wheelRotation, updatePrizeCounts, totalSpins]);
+  }, [
+    isSpinning,
+    spinsLeft,
+    getRandomPrizeIndex,
+    prizes,
+    wheelRotation,
+    updatePrizeCounts,
+    totalSpins,
+  ]);
 
   useEffect(() => {
     if (isSpinning) {
       const animationInterval = setInterval(() => {
-        setWheelRotation(prevRotation => {
+        setWheelRotation((prevRotation) => {
           if (prevRotation < targetRotation) {
             return prevRotation + 10;
           } else {
@@ -153,7 +196,7 @@ const WheelOfFortune = () => {
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setTimeLeft(prevTime => {
+      setTimeLeft((prevTime) => {
         if (prevTime > 0) {
           return prevTime - 1;
         } else {
@@ -166,8 +209,14 @@ const WheelOfFortune = () => {
   }, []);
 
   useEffect(() => {
-    const allPrizesGone = prizes.every(prize => prize.count === 0 || prize.count === Infinity);
-    if ((allPrizesGone && totalSpins >= 50) || timeLeft === 0 || spinsLeft === 0) {
+    const allPrizesGone = prizes.every(
+      (prize) => prize.count === 0 || prize.count === Infinity
+    );
+    if (
+      (allPrizesGone && totalSpins >= 50) ||
+      timeLeft === 0 ||
+      spinsLeft === 0
+    ) {
       // End the game
       setSpinsLeft(0);
     }
@@ -177,7 +226,9 @@ const WheelOfFortune = () => {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const secs = seconds % 60;
-    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    return `${hours.toString().padStart(2, "0")}:${minutes
+      .toString()
+      .padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
   };
 
   const WheelSVG = () => (
@@ -195,7 +246,15 @@ const WheelOfFortune = () => {
           </feMerge>
         </filter>
       </defs>
-      <circle cx="250" cy="250" r="240" fill="none" stroke="white" strokeWidth="20" filter="url(#shadow)" />
+      <circle
+        cx="250"
+        cy="250"
+        r="240"
+        fill="none"
+        stroke="white"
+        strokeWidth="20"
+        filter="url(#shadow)"
+      />
       <g transform={`rotate(${wheelRotation} 250 250)`}>
         {prizes.map((prize, index) => {
           const angle = (index / prizes.length) * 360;
@@ -226,16 +285,23 @@ const WheelOfFortune = () => {
                 textAnchor="middle"
                 dominantBaseline="middle"
                 transform={`rotate(${midAngle} ${textX} ${textY})`}
-                
               >
-                {prize.name.length > 15 ? prize.name.slice(0, 15) + '...' : prize.name}
+                {prize.name.length > 15
+                  ? prize.name.slice(0, 15) + "..."
+                  : prize.name}
               </text>
             </g>
           );
         })}
       </g>
-      <circle cx="250" cy="250" r="15" fill="white" stroke="#333" strokeWidth="2" />
-      
+      <circle
+        cx="250"
+        cy="250"
+        r="15"
+        fill="white"
+        stroke="#333"
+        strokeWidth="2"
+      />
     </svg>
   );
 
@@ -259,8 +325,14 @@ const WheelOfFortune = () => {
           animation: fall 3s linear infinite;
         }
         @keyframes fall {
-          0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
-          100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+          0% {
+            transform: translateY(-100px) rotate(0deg);
+            opacity: 1;
+          }
+          100% {
+            transform: translateY(100vh) rotate(360deg);
+            opacity: 0;
+          }
         }
       `}</style>
       <Confetti active={showConfetti} />
@@ -268,7 +340,9 @@ const WheelOfFortune = () => {
         <div className="absolute inset-0 bg-grid-pattern"></div>
       </div>
       <div className="relative z-10 flex flex-col items-center justify-center">
-        <h1 className="text-4xl font-bold mb-6 text-white shadow-text">Lucky Spin Wheel</h1>
+        <h1 className="text-4xl font-bold mb-6 text-white shadow-text">
+          Lucky Spin Wheel
+        </h1>
         <div className="relative">
           <WheelSVG />
           <button
@@ -277,7 +351,11 @@ const WheelOfFortune = () => {
               w-24 h-24 rounded-full flex items-center justify-center
               bg-white text-blue-500 font-bold text-xl
               transition-all duration-300 ease-in-out
-              ${isSpinning || spinsLeft === 0 ? 'cursor-not-allowed opacity-70' : 'cursor-pointer hover:scale-105 active:scale-95'}
+              ${
+                isSpinning || spinsLeft === 0
+                  ? "cursor-not-allowed opacity-70"
+                  : "cursor-pointer hover:scale-105 active:scale-95"
+              }
             `}
             style={{
               boxShadow: `
@@ -285,7 +363,7 @@ const WheelOfFortune = () => {
                 0 3px 3px rgba(0, 0, 0, 0.1),
                 inset 0 -3px 3px rgba(0, 0, 0, 0.1),
                 inset 0 3px 3px rgba(255, 255, 255, 0.5)
-              `
+              `,
             }}
             onClick={spin}
             disabled={isSpinning || spinsLeft === 0}
@@ -304,23 +382,29 @@ const WheelOfFortune = () => {
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap justify-center items-center gap-4">
-              {prizes.map((prize, index) => (
-                prize.count !== Infinity && (
-                  <div key={index} className="flex items-center space-x-2">
-                    <span>{prize.name}:</span>
-                    <span className="font-bold">{prize.count}</span>
-                  </div>
-                )
-              ))}
+              {prizes.map(
+                (prize, index) =>
+                  prize.count !== Infinity && (
+                    <div key={index} className="flex items-center space-x-2">
+                      <span>{prize.name}:</span>
+                      <span className="font-bold">{prize.count}</span>
+                    </div>
+                  )
+              )}
             </div>
           </CardContent>
         </Card>
       </div>
       {spinResult && (
-        <Dialog open={showResultPopup} onOpenChange={() => setShowResultPopup(false)}>
+        <Dialog
+          open={showResultPopup}
+          onOpenChange={() => setShowResultPopup(false)}
+        >
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>{spinResult.count === Infinity ? 'เสียใจด้วย' : 'ยินดีด้วย!'}</DialogTitle>
+              <DialogTitle>
+                {spinResult.count === Infinity ? "เสียใจด้วย" : "ยินดีด้วย!"}
+              </DialogTitle>
             </DialogHeader>
             <p>{spinResult.name}</p>
           </DialogContent>
@@ -331,3 +415,5 @@ const WheelOfFortune = () => {
 };
 
 export default WheelOfFortune;
+
+

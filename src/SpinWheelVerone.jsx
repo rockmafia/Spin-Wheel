@@ -1,18 +1,27 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { AlertDialog, AlertDialogAction, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+import { Coins } from 'lucide-react';
+import Incos from "../src/assets/In-cos.jpg"
+
 const Confetti = ({ active }) => {
   if (!active) return null;
 
   return (
     <div className="confetti-container">
       {[...Array(50)].map((_, i) => (
-        <div 
-          key={i} 
-          className="confetti" 
+        <div
+          key={i}
+          className="confetti"
           style={{
             left: `${Math.random() * 100}%`,
             animationDelay: `${Math.random() * 3}s`,
-            backgroundColor: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff'][Math.floor(Math.random() * 5)]
+            backgroundColor: [
+              "#ff0000",
+              "#00ff00",
+              "#0000ff",
+              "#ffff00",
+              "#ff00ff",
+            ][Math.floor(Math.random() * 5)],
           }}
         />
       ))}
@@ -24,7 +33,7 @@ export default function SpinningWheelGame() {
   const [spinning, setSpinning] = useState(false);
   const [prizeIndex, setPrizeIndex] = useState(0);
   const wheelRef = useRef(null);
-  const [prizes, setPrizes] = useState([
+  const [prizes] = useState([
     { option: 'บัตร Starbucks', count: 25, color: '#8df129' },
     { option: 'บัตร Starbucks', count: 10, color: '#30b3ff' },
     { option: 'Gift Voucher Central 500 บาท', count: 3, color: '#ffde46' },
@@ -35,10 +44,9 @@ export default function SpinningWheelGame() {
     { option: 'เสียใจด้วยคุณไม่ได้รับรางวัล', count: Infinity, color: '#fa30ac' }
   ]);
   const [spins, setSpins] = useState(0);
-  const [timeRemaining, setTimeRemaining] = useState(6 * 60 * 60);
   const [gameOver, setGameOver] = useState(false);
-  const [showResult, setShowResult] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
+  const [showResult, setShowResult] = useState(false);
   const [distributedPrizes, setDistributedPrizes] = useState({
     starbucks25: 0,
     starbucks10: 0,
@@ -47,59 +55,50 @@ export default function SpinningWheelGame() {
     voucher1000: 0
   });
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeRemaining(prevTime => {
-        if (prevTime <= 0) {
-          clearInterval(timer);
-          setGameOver(true);
-          return 0;
-        }
-        return prevTime - 1;
-      });
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, []);
-
   const selectPrize = useCallback(() => {
-    const firstHalf = timeRemaining > 3 * 60 * 60;
-    const totalTime = 6 * 60 * 60;
-    const elapsedTime = totalTime - timeRemaining;
+    if (spins < 50) {
+      const remainingSpins = 50 - spins;
+      const remainingPrizes = 25 - distributedPrizes.starbucks25;
+      const probability = remainingPrizes / remainingSpins;
+      
+      if (remainingPrizes > 0 && Math.random() < probability) {
+        return 0;
+      }
+      return [3, 5, 7][Math.floor(Math.random() * 3)];
+    }
     
-    const baseChance = 0.3;
-    const timeBonus = elapsedTime / totalTime * 0.2;
-    const prizeChance = baseChance + timeBonus;
-
-    if (Math.random() < prizeChance) {
-      if (firstHalf) {
-        if (distributedPrizes.starbucks25 < 25) {
-          const remainingStarbucks = 25 - distributedPrizes.starbucks25;
-          const starbucksChance = remainingStarbucks / 25;
-          if (Math.random() < starbucksChance) {
-            return 0;
+    if (spins < 150) {
+      const remainingSpins = 150 - spins;
+      const remainingPrizes = [
+        { index: 1, remaining: 10 - distributedPrizes.starbucks10 },
+        { index: 2, remaining: 3 - distributedPrizes.voucher500 },
+        { index: 4, remaining: 15 - distributedPrizes.starbucks15 },
+        { index: 6, remaining: 2 - distributedPrizes.voucher1000 }
+      ].filter(prize => prize.remaining > 0);
+      
+      const totalRemainingPrizes = remainingPrizes.reduce((sum, prize) => sum + prize.remaining, 0);
+      const probability = totalRemainingPrizes / remainingSpins;
+      
+      if (remainingPrizes.length > 0 && Math.random() < probability) {
+        const randomValue = Math.random() * totalRemainingPrizes;
+        let accumulator = 0;
+        
+        for (const prize of remainingPrizes) {
+          accumulator += prize.remaining;
+          if (randomValue <= accumulator) {
+            return prize.index;
           }
         }
-      } else {
-        const remainingPrizes = [
-          { index: 1, remaining: 10 - distributedPrizes.starbucks10 },
-          { index: 2, remaining: 3 - distributedPrizes.voucher500 },
-          { index: 4, remaining: 15 - distributedPrizes.starbucks15 },
-          { index: 6, remaining: 2 - distributedPrizes.voucher1000 }
-        ].filter(prize => prize.remaining > 0);
-
-        if (remainingPrizes.length > 0) {
-          const randomPrize = remainingPrizes[Math.floor(Math.random() * remainingPrizes.length)];
-          return randomPrize.index;
-        }
       }
+      return [3, 5, 7][Math.floor(Math.random() * 3)];
     }
-
-    return [3, 5, 7][Math.floor(Math.random() * 3)];
-  }, [timeRemaining, distributedPrizes]);
+    
+    setGameOver(true);
+    return -1;
+  }, [spins, distributedPrizes]);
 
   const handleSpinClick = () => {
-    if (gameOver || spinning) return;
+    if (gameOver || spinning || spins >= 150) return;
 
     const selectedIndex = selectPrize();
     if (selectedIndex === -1) {
@@ -108,7 +107,7 @@ export default function SpinningWheelGame() {
     }
 
     setSpinning(true);
-    setSpins(prevSpins => prevSpins + 1);
+    setSpins(prev => prev + 1);
 
     const spinDuration = 5000;
     const spinRotations = 5 + Math.random() * 5;
@@ -122,14 +121,9 @@ export default function SpinningWheelGame() {
     setTimeout(() => {
       setSpinning(false);
       setShowResult(true);
-      if (prizes[selectedIndex].count !== Infinity) {
+      if (selectedIndex !== 3 && selectedIndex !== 5 && selectedIndex !== 7) {
         setShowConfetti(true);
         setTimeout(() => setShowConfetti(false), 5000);
-        setPrizes(prevPrizes => 
-          prevPrizes.map((prize, index) => 
-            index === selectedIndex ? { ...prize, count: prize.count - 1 } : prize
-          )
-        );
         setDistributedPrizes(prev => {
           const newDistributed = { ...prev };
           switch (selectedIndex) {
@@ -142,21 +136,17 @@ export default function SpinningWheelGame() {
           return newDistributed;
         });
       }
+      
+      if (spins >= 149) setGameOver(true);
+      
       wheelRef.current.style.transition = 'none';
       wheelRef.current.style.transform = `rotate(${targetRotation % 360}deg)`;
     }, spinDuration);
   };
 
-  const formatTime = (seconds) => {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const secs = seconds % 60;
-    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-  };
-
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-white p-4">
-<style jsx>{`
+      <style jsx>{`
         .confetti-container {
           position: fixed;
           top: 0;
@@ -174,12 +164,34 @@ export default function SpinningWheelGame() {
           animation: fall 3s linear infinite;
         }
         @keyframes fall {
-          0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
-          100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+          0% {
+            transform: translateY(-100px) rotate(0deg);
+            opacity: 1;
+          }
+          100% {
+            transform: translateY(100vh) rotate(360deg);
+            opacity: 0;
+          }
         }
       `}</style>
       <Confetti active={showConfetti} />
-      <h1 className="text-3xl font-bold mb-4">เกมส์วงล้อเสี่ยงโชค</h1>
+      <div className="text-center mb-4">
+        <div>
+          <img src={Incos} alt='In-cos 2024' style={{width:"400px",height:"100px"}} className='mb-4'/>
+        </div>
+        {/* <h1 className="text-3xl font-bold mb-2 font-mono" style={{
+          background: 'linear-gradient(45deg, #FFD700, #FFA500)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          textShadow: '0 0 10px rgba(255, 215, 0, 0.5)'
+        }}>
+          IN-COSMETICS ASIA 2024
+        </h1> */}
+        <h2 className="text-2xl  text-green-600 font-display">
+           BJ Lucky Spin Wheel Game 
+        </h2>
+      </div>
+      <div className="text-lg mb-4">จำนวนการหมุน: {spins}</div>
       <div className="mb-4 relative" style={{ width: '400px', height: '400px' }}>
         <svg width="400" height="400" viewBox="0 0 400 400">
           <defs>
@@ -273,20 +285,22 @@ export default function SpinningWheelGame() {
             </g>
           </g>
 
-          <circle cx="200" cy="200" r="15" fill="url(#goldGradient)" filter="url(#goldEffect)" />
-          <circle cx="200" cy="200" r="10" fill="#FFFFFF" />
+          <g className="cursor-pointer" onClick={handleSpinClick} style={{ pointerEvents: gameOver || spinning ? 'none' : 'auto' }}>
+            <circle cx="200" cy="200" r="40" fill="url(#goldGradient)" filter="url(#goldEffect)" />
+            <circle cx="200" cy="200" r="35" fill="#FFFFFF" />
+            <foreignObject x="170" y="170" width="60" height="60">
+              <div className="h-full w-full flex items-center justify-center">
+                <Coins 
+                  className={`w-8 h-8 ${spinning ? 'animate-spin' : ''}`} 
+                  color={gameOver ? '#666666' : '#FFD700'} 
+                />
+              </div>
+            </foreignObject>
+          </g>
+          
           <polygon points="200,5 190,40 210,40" fill="url(#goldGradient)" filter="url(#goldEffect)" />
         </svg>
       </div>
-      <button
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4"
-        onClick={handleSpinClick}
-        disabled={gameOver || spinning}
-      >
-        {gameOver ? 'เกมจบแล้ว' : (spinning ? 'กำลังหมุน...' : 'หมุน!')}
-      </button>
-      <div className="text-lg mb-2">เวลาที่เหลือ: {formatTime(timeRemaining)}</div>
-      <div className="text-lg mb-2">จำนวนการหมุน: {spins}</div>
       <div className="grid grid-cols-2 gap-4">
         {prizes
           .filter((_, index) => ![3, 5, 7].includes(index))

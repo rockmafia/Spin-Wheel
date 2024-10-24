@@ -16,6 +16,9 @@ module.exports = {
   			'2xl': '1400px'
   		}
   	},
+	  fontFamily: {
+		display: ["Nanum-Gothic", "sans-serif"],
+	  },
   	extend: {
   		keyframes: {
   			'accordion-down': {
@@ -87,6 +90,7 @@ module.exports = {
   			}
   		}
   	}
+	
   },
   plugins: [require("tailwindcss-animate")],
 }
