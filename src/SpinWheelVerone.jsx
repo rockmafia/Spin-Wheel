@@ -34,6 +34,7 @@ const Confetti = ({ active }) => {
         fill-rule="evenodd"
         clip-rule="evenodd"
         viewBox="0 0 512 511.995"
+        style={{width:"24px"}}
       >
         <path
           fill="#ECCA43"
