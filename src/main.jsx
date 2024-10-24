@@ -6,7 +6,6 @@ import PrizeWheelLast from './PrizeWheelLast.jsx'
 import GoldenWheelSpin from './GoldenWheelSpin.jsx'
 import SpinWheelVerone from './SpinWheelVerone.jsx'
 import './index.css'
-
 createRoot(document.getElementById('root')).render(
   <StrictMode >
     {/* <App /> */}
@@ -15,6 +14,7 @@ createRoot(document.getElementById('root')).render(
     {/* <PrizeWheelLast/> */}
     <GoldenWheelSpin/>
    </div>
+
     
    
   </StrictMode>,
