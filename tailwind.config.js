@@ -17,7 +17,8 @@ module.exports = {
   		}
   	},
 	  fontFamily: {
-		display: ["Nanum-Gothic", "sans-serif"],
+		poppins: ['Poppins', 'sans-serif'],
+        nanum: ['Nanum Gothic', 'sans-serif'],
 	  },
   	extend: {
   		keyframes: {

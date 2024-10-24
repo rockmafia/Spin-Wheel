@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef,useEffect } from 'react';
 import { AlertDialog, AlertDialogAction, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { Coins } from 'lucide-react';
 import Incos from "../src/assets/In-cos.jpg"
@@ -94,6 +94,41 @@ export default function SpinningWheelGame() {
     voucher1000: 0
   });
 
+  const spinSound = useRef(null);
+  const [isSoundLoaded, setIsSoundLoaded] = useState(true);
+
+  useEffect(() => {
+    spinSound.current = new Audio("../spin-232536.wav");
+    spinSound.current.addEventListener("canplaythrough", () =>
+      setIsSoundLoaded(true)
+    );
+    spinSound.current.addEventListener("error", (e) =>
+      console.error("Error loading sound:", e)
+    );
+
+    return () => {
+      if (spinSound.current) {
+        spinSound.current.removeEventListener("canplaythrough", () =>
+          setIsSoundLoaded(true)
+        );
+        spinSound.current.removeEventListener("error", (e) =>
+          console.error("Error loading sound:", e)
+        );
+      }
+    };
+  }, []);
+
+  const playSpinSound = () => {
+    if (spinSound.current && isSoundLoaded) {
+      spinSound.current.currentTime = 0;
+      spinSound.current
+        .play()
+        .catch((e) => console.error("Error playing sound:", e));
+    } else {
+      console.warn("Spin sound not loaded yet");
+    }
+  };
+
   const selectPrize = useCallback(() => {
     if (spins < 50) {
       const remainingSpins = 50 - spins;
@@ -114,7 +149,7 @@ export default function SpinningWheelGame() {
         { index: 4, remaining: 15 - distributedPrizes.starbucks15 },
         { index: 6, remaining: 2 - distributedPrizes.voucher1000 }
       ].filter(prize => prize.remaining > 0);
-      
+      playSpinSound();
       const totalRemainingPrizes = remainingPrizes.reduce((sum, prize) => sum + prize.remaining, 0);
       const probability = totalRemainingPrizes / remainingSpins;
       
@@ -176,12 +211,20 @@ export default function SpinningWheelGame() {
         });
       }
       
+      
       if (spins >= 149) setGameOver(true);
+      if (spinSound.current) {
+        spinSound.current.pause();
+        spinSound.current.currentTime = 0;
+      }
+    
       
       wheelRef.current.style.transition = 'none';
       wheelRef.current.style.transform = `rotate(${targetRotation % 360}deg)`;
     }, spinDuration);
   };
+
+  
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-white p-4">
@@ -226,7 +269,7 @@ export default function SpinningWheelGame() {
         }}>
           IN-COSMETICS ASIA 2024
         </h1> */}
-        <h2 className="text-2xl  text-green-600 font-display">
+        <h2 className="text-3xl   font-poppins font-bold" style={{color:"#56AD36"}}>
            BJ Lucky Spin Wheel Game 
         </h2>
       </div>

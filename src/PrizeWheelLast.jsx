@@ -61,7 +61,7 @@ const WheelOfFortune = () => {
   const [isSoundLoaded, setIsSoundLoaded] = useState(true);
 
   useEffect(() => {
-    spinSound.current = new Audio("./spin-232536.wav");
+    spinSound.current = new Audio("../public/spin-232536.wav");
     spinSound.current.addEventListener("canplaythrough", () =>
       setIsSoundLoaded(true)
     );
@@ -221,6 +221,7 @@ const WheelOfFortune = () => {
       setSpinsLeft(0);
     }
   }, [prizes, totalSpins, timeLeft, spinsLeft]);
+  
 
   const formatTime = (seconds) => {
     const hours = Math.floor(seconds / 3600);
