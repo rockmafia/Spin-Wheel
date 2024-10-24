@@ -1,6 +1,8 @@
 import { useState, useCallback, useRef } from 'react';
 import { AlertDialog, AlertDialogAction, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { Coins } from 'lucide-react';
+import Incos from "../src/assets/In-cos.jpg"
+
 
 const Confetti = ({ active }) => {
     if (!active) return null;
@@ -221,7 +223,22 @@ export default function SpinningWheelGame() {
         }
       `}</style>
       <Confetti active={showConfetti} />
-      <h1 className="text-3xl font-bold mb-4">BJ Lucky Spin Wheel</h1>
+      <div className="text-center mb-4">
+        <div>
+          <img src={Incos} alt='In-cos 2024' style={{width:"400px",height:"100px"}} className='mb-4'/>
+        </div>
+        {/* <h1 className="text-3xl font-bold mb-2 font-mono" style={{
+          background: 'linear-gradient(45deg, #FFD700, #FFA500)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          textShadow: '0 0 10px rgba(255, 215, 0, 0.5)'
+        }}>
+          IN-COSMETICS ASIA 2024
+        </h1> */}
+        <h2 className="text-3xl   font-serif font-bold" style={{color:"#56AD36"}}>
+           BJ Lucky Spin Wheel Game 
+        </h2>
+      </div>
       <div className="text-lg mb-4">จำนวนการหมุน: {spins}</div>
       <div className="mb-4 relative" style={{ width: '400px', height: '400px' }}>
         <svg width="400" height="400" viewBox="0 0 400 400">
@@ -329,7 +346,6 @@ export default function SpinningWheelGame() {
             </foreignObject>
           </g>
           
-          <polygon points="200,5 190,40 210,40" fill="url(#goldGradient)" filter="url(#goldEffect)" />
         </svg>
       </div>
       <div className="grid grid-cols-2 gap-4">
