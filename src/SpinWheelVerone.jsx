@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef,useEffect } from 'react';
 import { AlertDialog, AlertDialogAction, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { Coins } from 'lucide-react';
 import Incos from "../src/assets/In-cos.jpg"
@@ -95,6 +95,40 @@ export default function SpinningWheelGame() {
     starbucks15: 0,
     voucher1000: 0
   });
+  const spinSound = useRef(null);
+  const [isSoundLoaded, setIsSoundLoaded] = useState(true);
+
+  useEffect(() => {
+    spinSound.current = new Audio("../public/spin-232536.wav");
+    spinSound.current.addEventListener("canplaythrough", () =>
+      setIsSoundLoaded(true)
+    );
+    spinSound.current.addEventListener("error", (e) =>
+      console.error("Error loading sound:", e)
+    );
+
+    return () => {
+      if (spinSound.current) {
+        spinSound.current.removeEventListener("canplaythrough", () =>
+          setIsSoundLoaded(true)
+        );
+        spinSound.current.removeEventListener("error", (e) =>
+          console.error("Error loading sound:", e)
+        );
+      }
+    };
+  }, []);
+
+  const playSpinSound = () => {
+    if (spinSound.current && isSoundLoaded) {
+      spinSound.current.currentTime = 0;
+      spinSound.current
+        .play()
+        .catch((e) => console.error("Error playing sound:", e));
+    } else {
+      console.warn("Spin sound not loaded yet");
+    }
+  };
 
   const selectPrize = useCallback(() => {
     if (spins < 50) {
@@ -149,6 +183,7 @@ export default function SpinningWheelGame() {
 
     setSpinning(true);
     setSpins(prevSpins => prevSpins + 1);
+    playSpinSound();
 
     const spinDuration = 5000;
     const spinRotations = 5 + Math.random() * 5;
@@ -182,7 +217,10 @@ export default function SpinningWheelGame() {
           return newDistributed;
         });
       }
-      
+      if (spinSound.current) {
+        spinSound.current.pause();
+        spinSound.current.currentTime = 0;
+      }
       if (spins >= 149) {
         setGameOver(true);
       }
