@@ -9,7 +9,7 @@ import './index.css'
 createRoot(document.getElementById('root')).render(
   <StrictMode >
     {/* <App /> */}
-   <div className='display-wheel'>
+   <div className=''>
    <SpinWheelVerone/> 
     {/* <PrizeWheelLast/> */}
     <GoldenWheelSpin/>

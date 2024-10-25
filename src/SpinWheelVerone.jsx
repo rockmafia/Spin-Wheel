@@ -99,7 +99,7 @@ export default function SpinningWheelGame() {
   const [isSoundLoaded, setIsSoundLoaded] = useState(true);
 
   useEffect(() => {
-    spinSound.current = new Audio("../public/spin-232536.wav");
+    spinSound.current = new Audio("../spin-232536.wav");
     spinSound.current.addEventListener("canplaythrough", () =>
       setIsSoundLoaded(true)
     );
