@@ -97,6 +97,9 @@ export default function SpinningWheelGame() {
   });
   const spinSound = useRef(null);
   const [isSoundLoaded, setIsSoundLoaded] = useState(true);
+  const spinSoundConglet = useRef(null);
+  const [isSound, setIsSound] = useState(true);
+
 
   useEffect(() => {
     spinSound.current = new Audio("../spin-232536.wav");
@@ -129,6 +132,39 @@ export default function SpinningWheelGame() {
       console.warn("Spin sound not loaded yet");
     }
   };
+
+  useEffect(() => {
+    spinSoundConglet.current = new Audio("../AudienceSoundEffect.wav");
+    spinSoundConglet.current.addEventListener("canplaythrough", () =>
+      setIsSoundLoaded(true)
+    );
+    spinSoundConglet.current.addEventListener("error", (e) =>
+      console.error("Error loading sound:", e)
+    );
+
+    return () => {
+      if (spinSoundConglet.current) {
+        spinSoundConglet.current.removeEventListener("canplaythrough", () =>
+          setIsSoundLoaded(true)
+        );
+        spinSoundConglet.current.removeEventListener("error", (e) =>
+          console.error("Error loading sound:", e)
+        );
+      }
+    };
+  }, []);
+
+  const playSpinSoundConglet = () => {
+    if (spinSoundConglet.current && isSoundLoaded) {
+      spinSoundConglet.current.currentTime = 0;
+      spinSoundConglet.current
+        .play()
+        .catch((e) => console.error("Error playing sound:", e));
+    } else {
+      console.warn("Spin sound not loaded yet");
+    }
+  };
+
 
   const selectPrize = useCallback(() => {
     if (spins < 50) {
@@ -185,7 +221,7 @@ export default function SpinningWheelGame() {
     setSpins(prevSpins => prevSpins + 1);
     playSpinSound();
 
-    const spinDuration = 5000;
+    const spinDuration = 11000; //แก้จาก 5000 5วิ
     const spinRotations = 5 + Math.random() * 5;
     const targetRotation = 360 * spinRotations + (360 / prizes.length) * (prizes.length - selectedIndex);
     
@@ -199,6 +235,8 @@ export default function SpinningWheelGame() {
       setShowResult(true);
       if (prizes[selectedIndex].count !== Infinity) {
         setShowConfetti(true);
+        setIsSound(true);
+        playSpinSoundConglet(true);
         setTimeout(() => setShowConfetti(false), 5000);
         setPrizes(prevPrizes => 
           prevPrizes.map((prize, index) => 
@@ -261,6 +299,7 @@ export default function SpinningWheelGame() {
         }
       `}</style>
       <Confetti active={showConfetti} />
+      <playSpinSoundConglet active={isSound}/>
       <div className="text-center mb-4">
         <div>
           <img src={Incos} alt='In-cos 2024' style={{width:"400px",height:"100px"}} className='mb-4'/>
@@ -396,11 +435,11 @@ export default function SpinningWheelGame() {
             </div>
           ))}
       </div>
-      <AlertDialog open={showResult} onOpenChange={setShowResult}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>ผลรางวัล</AlertDialogTitle>
-            <AlertDialogDescription>
+      <AlertDialog open={showResult} onOpenChange={setShowResult} >
+        <AlertDialogContent className="max-w-fit h-48" >
+          <AlertDialogHeader >
+            <AlertDialogTitle>รางวัล</AlertDialogTitle>
+            <AlertDialogDescription style={{fontSize:"38px"}}>
               คุณได้รับ: {prizes[prizeIndex].option}
             </AlertDialogDescription>
           </AlertDialogHeader>
