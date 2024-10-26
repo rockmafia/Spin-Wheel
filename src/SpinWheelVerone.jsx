@@ -439,7 +439,7 @@ export default function SpinningWheelGame() {
         <AlertDialogContent className="max-w-fit h-48" >
           <AlertDialogHeader >
             <AlertDialogTitle>รางวัล</AlertDialogTitle>
-            <AlertDialogDescription style={{fontSize:"38px"}}>
+            <AlertDialogDescription style={{fontSize:"24px"}}>
               คุณได้รับ: {prizes[prizeIndex].option}
             </AlertDialogDescription>
           </AlertDialogHeader>
