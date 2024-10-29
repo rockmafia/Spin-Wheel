@@ -255,7 +255,7 @@ const LuckyWheel = () => {
         </button>
         {/* <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-[20px] border-l-transparent border-r-[20px] border-r-transparent border-b-[40px] border-b-yellow-400"></div> */}
       </div>
-      <div className="mt-4 text-center bg-white p-4 rounded-lg shadow-lg w-full max-w-md">
+      <div className="mt-4 text-center bg-white p-4 rounded-lg shadow-lg w-full max-w-md text-black">
         <p className="text-lg font-bold mb-2">เวลาที่เหลือ: {Math.floor(timeLeft / 3600)}:{Math.floor((timeLeft % 3600) / 60)}:{timeLeft % 60}</p>
         <p className="text-md mb-2">จำนวนการหมุนที่เหลือ: {remainingSpins}</p>
         <p className="text-md font-semibold mb-2">รางวัลที่เหลือ:</p>

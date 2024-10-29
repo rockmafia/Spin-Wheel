@@ -24,6 +24,9 @@ export default {
 		'body': ['"Open Sans"'],
 	  },
   	extend: {
+		backgroundimage: {
+			'heropattern': "url('public/BJ-Lucky-Spin-Wheel.jpg')",
+		  },
   		keyframes: {
   			'accordion-down': {
   				from: {
@@ -52,7 +55,7 @@ export default {
   			sm: 'calc(var(--radius) - 4px)'
   		},
   		colors: {
-  			background: 'hsl(var(--background))',
+  			
   			foreground: 'hsl(var(--foreground))',
   			card: {
   				DEFAULT: 'hsl(var(--card))',

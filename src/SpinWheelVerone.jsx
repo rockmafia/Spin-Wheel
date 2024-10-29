@@ -309,7 +309,7 @@ export default function SpinningWheelGame() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-purple-500 to-pink-500 p-4">
+    <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-white" >
       <style jsx>{`
         .confetti-container {
           position: fixed;
@@ -358,7 +358,7 @@ export default function SpinningWheelGame() {
           IN-COSMETICS ASIA 2024
         </h1> */}
         <h2
-          className="text-3xl   font-serif font-bold"
+          className="text-3xl font-serif font-bold"
           style={{ color: "#56AD36" }}
         >
           BJ Lucky Spin Wheel Game
@@ -547,7 +547,7 @@ export default function SpinningWheelGame() {
         {prizes
           .filter((_, index) => ![3, 5, 7].includes(index))
           .map((prize, index) => (
-            <div key={index} className="bg-white p-2 rounded shadow">
+            <div key={index} className="bg-white text-black p-2 rounded shadow">
               <div>
                 {index + 1}. {prize.option}
               </div>

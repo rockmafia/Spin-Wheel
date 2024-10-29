@@ -6,16 +6,26 @@ import PrizeWheelLast from './PrizeWheelLast.jsx'
 import GoldenWheelSpin from './GoldenWheelSpin.jsx'
 import SpinWheelVerone from './SpinWheelVerone.jsx'
 import './index.css'
+import PeopleWheelSpin from "../src/PeopleWheelSpin.jsx"
+import { BrowserRouter,Route,Routes } from "react-router-dom";
+
+
 createRoot(document.getElementById('root')).render(
+  <BrowserRouter>
+      
+   
   <StrictMode >
     {/* <App /> */}
-   <div className=''>
-   <SpinWheelVerone/> 
-    {/* <PrizeWheelLast/> */}
-    <GoldenWheelSpin/>
-   </div>
-
-    
    
+   <Routes>
+    <Route path='/' element={<> <SpinWheelVerone/> <GoldenWheelSpin/> </> }/>
+    <Route path="/people-gold" element={<PeopleWheelSpin />} />
+  
+   {/* <SpinWheelVerone/> 
+    {/* <PrizeWheelLast/> */}
+    {/* <GoldenWheelSpin/>  */}
+   </Routes>
+
   </StrictMode>,
+  </BrowserRouter>
 )
