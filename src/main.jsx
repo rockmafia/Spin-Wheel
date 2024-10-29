@@ -21,7 +21,7 @@ createRoot(document.getElementById("root")).render(
             </>
           }
         />
-        <Route path="/Peoplegold" element={<PeopleWheelSpin />} />
+        <Route path="/t" element={<PeopleWheelSpin />} />
       </Routes>
     </StrictMode>
   </BrowserRouter>
