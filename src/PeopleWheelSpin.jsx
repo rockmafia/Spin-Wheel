@@ -9,7 +9,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import Bgbg from "../public/Bjbg.jpg";
+import Sound from "../public/sound-effect.wav"
 
 
 
@@ -215,6 +215,8 @@ const LuckyWheel = () => {
   const [showResult, setShowResult] = useState(false);
   const [winner, setWinner] = useState("");
   const audioRef = useRef(null);
+  const [hasInteracted, setHasInteracted] = useState(false);
+
 
   useEffect(() => {
     // เล่นเสียงเบื้องหลัง
@@ -258,9 +260,20 @@ const LuckyWheel = () => {
     }
     if (spinEffect.current) {
         spinEffect.current.currentTime = 0; // รีเซ็ตเสียง
-        spinEffect.current.play(); // เล่นเสียงเอฟเฟกต์
+        spinEffect.current.play().catch(err => {
+          console.error("Error playing spin sound:", err);
+        });
       }
     
+  };
+
+  const handleUserInteraction = () => {
+    if (!hasInteracted) {
+      audioRef.current.play().catch(err => {
+        console.error("Error playing background sound:", err);
+      });
+      setHasInteracted(true);
+    }
   };
 
   return (
@@ -270,8 +283,8 @@ const LuckyWheel = () => {
         backgroundImage: `url(/Bjbg.jpg)`,
         backgroundSize: "auto",
       }}
-    >
-      <audio ref={audioRef} src="/sound-effect.wav" loop />
+      onClick={handleUserInteraction}>
+      <audio ref={audioRef} src={Sound}  />
       <div className="relative xl:w-[34rem] xl:h-[34rem] xl:mt-[21rem] w-80 h-80  ">
         <div
           className="absolute inset-0 rounded-full"
