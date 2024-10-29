@@ -19,7 +19,7 @@ createRoot(document.getElementById('root')).render(
    
    <Routes>
     <Route path='/' element={<> <SpinWheelVerone/> <GoldenWheelSpin/> </> }/>
-    <Route path="/people-gold" element={<PeopleWheelSpin />} />
+    <Route path="/peoplegold" element={<PeopleWheelSpin />} />
   
    {/* <SpinWheelVerone/> 
     {/* <PrizeWheelLast/> */}
