@@ -309,7 +309,7 @@ export default function SpinningWheelGame() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-white p-4">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-purple-500 to-pink-500 p-4">
       <style jsx>{`
         .confetti-container {
           position: fixed;
