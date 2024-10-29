@@ -132,7 +132,7 @@ const Circle = ({ isSpinning, spinDegrees }) => {
       className="relative w-full h-full transition-transform"
       style={{
         transform: `rotate(${spinDegrees}deg)`,
-        transition: isSpinning ? 'transform 5s cubic-bezier(0.2, 0.8, 0.2, 1)' : 'none'
+        transition: isSpinning ? 'transform 10s cubic-bezier(0.2, 0.8, 0.2, 1)' : 'none'
       }}
     >
       <div 
@@ -222,7 +222,7 @@ const LuckyWheel = () => {
       setTimeout(() => {
         setIsSpinning(false);
         setShowResult(true);
-      }, 5000);
+      }, 10000);
     }
   };
 
