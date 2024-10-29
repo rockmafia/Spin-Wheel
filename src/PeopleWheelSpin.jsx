@@ -145,7 +145,7 @@ const Circle = ({ isSpinning, spinDegrees }) => {
       style={{
         transform: `rotate(${spinDegrees}deg)`,
         transition: isSpinning
-          ? "transform 15s cubic-bezier(0.2, 0.8, 0.2, 1)"
+          ? "transform 30s cubic-bezier(0.2, 0.8, 0.2, 1)"
           : "none",
       }}
     >
@@ -256,7 +256,7 @@ const LuckyWheel = () => {
       setTimeout(() => {
         setIsSpinning(false);
         setShowResult(true);
-      }, 15000);
+      }, 30000);
     }
     if (spinEffect.current) {
         spinEffect.current.currentTime = 0; // รีเซ็ตเสียง
