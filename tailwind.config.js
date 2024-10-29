@@ -24,6 +24,7 @@ export default {
 		'body': ['"Open Sans"'],
 	  },
   	extend: {
+		
 		backgroundimage: {
 			'heropattern': "url('public/BJ-Lucky-Spin-Wheel.jpg')",
 		  },

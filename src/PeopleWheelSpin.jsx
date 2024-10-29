@@ -9,6 +9,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import Bgbg from "../public/Bjbg.jpg"
 
 const TOTAL_LEDS = 35;
 const BRIGHTER_LEDS = [0, 4, 9, 14, 19, 24, 29, 34];
@@ -68,7 +69,7 @@ const PrizePin = () => (
       transform: 'rotate(45deg)',
     }}
   >
-    <div className="relative w-12 h-12">
+    <div className="relative xl:w-[10rem] h-12 w-12 ">
       <div 
         className="absolute top-0 left-1/2 transform -translate-x-1/2 w-12 h-12 rounded-full"
         style={{
@@ -226,8 +227,14 @@ const LuckyWheel = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-[#1a1a1a] p-4">
-      <div className="relative w-96 h-96 mb-8">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-[#1a1a1a] p-4"
+    style={{
+        backgroundImage: `url(/Bjbg.jpg)`,
+        backgroundSize: 'auto',
+      }}
+
+    >
+      <div className="relative xl:w-[34rem] xl:h-[34rem] xl:mt-[21rem] w-80 h-80  ">
         <div 
           className="absolute inset-0 rounded-full"
           style={{ 
