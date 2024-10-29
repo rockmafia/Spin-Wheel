@@ -11,6 +11,34 @@ import {
 } from "@/components/ui/alert-dialog";
 import Sound from "../public/sound-effect.wav"
 
+const Confetti = ({ active }) => {
+  if (!active) return null;
+
+  return (
+    <div className="confetti-container">
+      {[...Array(50)].map((_, i) => (
+        <div
+          key={i}
+          className="confetti"
+          style={{
+            left: `${Math.random() * 100}%`,
+            animationDelay: `${Math.random() * 3}s`,
+            backgroundColor: [][Math.floor(Math.random() * 5)],
+            backgroundColor: [
+              "#ff0000",
+              "#00ff00",
+              "#0000ff",
+              "#ffff00",
+              "#ff00ff",
+            ][Math.floor(Math.random() * 5)]
+          }}
+        >
+          
+        </div>
+      ))}
+    </div>
+  );
+};
 
 
 const TOTAL_LEDS = 35;
@@ -216,14 +244,85 @@ const LuckyWheel = () => {
   const [winner, setWinner] = useState("");
   const audioRef = useRef(null);
   const [hasInteracted, setHasInteracted] = useState(false);
+  const spinSound = useRef(null);
+  const [isSoundLoaded, setIsSoundLoaded] = useState(true);
+  const spinSoundRef = useRef(null);
+  const spinSoundConglet = useRef(null);
+  const [showConfetti, setShowConfetti] = useState(false);
+
 
 
   useEffect(() => {
-    // เล่นเสียงเบื้องหลัง
-    if (audioRef.current) {
-      audioRef.current.play();
-    }
+    // Create new Audio object for spin sound
+    spinSoundRef.current = new Audio("/spin-sound.mp3"); // ตรวจสอบให้แน่ใจว่าไฟล์เสียงอยู่ในโฟลเดอร์ public
+    
+    // Preload the sound
+    spinSoundRef.current.load();
+    
+    return () => {
+      if (spinSoundRef.current) {
+        spinSoundRef.current.pause();
+        spinSoundRef.current = null;
+      }
+    };
   }, []);
+
+  const playSpinSound = () => {
+    if (spinSoundRef.current) {
+      spinSoundRef.current.currentTime = 0; // Reset sound to start
+      spinSoundRef.current.play().catch(error => {
+        console.error("Error playing spin sound:", error);
+      });
+    }
+  };
+  
+  // Reset spin sound after it finishes playing
+  useEffect(() => {
+    if (spinSoundRef.current) {
+      spinSoundRef.current.addEventListener("ended", () => {
+        spinSoundRef.current.currentTime = 0;
+      });
+    }
+    return () => {
+      if (spinSoundRef.current) {
+        spinSoundRef.current.removeEventListener("ended", () => {
+          spinSoundRef.current.currentTime = 0;
+        });
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    spinSoundConglet.current = new Audio("../AudienceSoundEffect.wav");
+    spinSoundConglet.current.addEventListener("canplaythrough", () =>
+      setIsSoundLoaded(true)
+    );
+    spinSoundConglet.current.addEventListener("error", (e) =>
+      console.error("Error loading sound:", e)
+    );
+
+    return () => {
+      if (spinSoundConglet.current) {
+        spinSoundConglet.current.removeEventListener("canplaythrough", () =>
+          setIsSoundLoaded(true)
+        );
+        spinSoundConglet.current.removeEventListener("error", (e) =>
+          console.error("Error loading sound:", e)
+        );
+      }
+    };
+  }, []);
+
+  const playSpinSoundConglet = () => {
+    if (spinSoundConglet.current && isSoundLoaded) {
+      spinSoundConglet.current.currentTime = 0;
+      spinSoundConglet.current
+        .play()
+        .catch((e) => console.error("Error playing sound:", e));
+    } else {
+      console.warn("Spin sound not loaded yet");
+    }
+  };
 
   const sections = [
     "คุณ A จากบริษัท AA",
@@ -241,6 +340,8 @@ const LuckyWheel = () => {
   const spinWheel = () => {
     if (!isSpinning) {
       setIsSpinning(true);
+     
+      playSpinSound();
 
       const winningIndex = Math.floor(Math.random() * sections.length);
       const sectionSize = 360 / sections.length;
@@ -249,21 +350,22 @@ const LuckyWheel = () => {
       const targetDegrees =
         360 - winningIndex * sectionSize - sectionSize / 2 - 45;
       const totalDegrees = spins * 360 + targetDegrees;
-
+      setIsSoundLoaded(true);
       setSpinDegrees(totalDegrees);
       setWinner(sections[winningIndex]);
-
+      
       setTimeout(() => {
         setIsSpinning(false);
+        setShowConfetti(true);
         setShowResult(true);
+        playSpinSoundConglet(true);
+        if (spinSound.current) {
+          spinSound.current.pause();
+          spinSound.current.currentTime = 0;
+        }
       }, 30000);
     }
-    if (spinEffect.current) {
-        spinEffect.current.currentTime = 0; // รีเซ็ตเสียง
-        spinEffect.current.play().catch(err => {
-          console.error("Error playing spin sound:", err);
-        });
-      }
+    
     
   };
 
@@ -284,8 +386,40 @@ const LuckyWheel = () => {
         backgroundSize: "auto",
       }}
       onClick={handleUserInteraction}>
+        <style jsx>{`
+        .confetti-container {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          pointer-events: none;
+          z-index: 1000;
+        }
+        .confetti {
+          position: absolute;
+          width: 10px;
+          height: 10px;
+          opacity: 0;
+          animation: fall 3s linear infinite;
+        }
+        @keyframes fall {
+          0% {
+            transform: translateY(-100px) rotate(0deg);
+            opacity: 1;
+          }
+          100% {
+            transform: translateY(100vh) rotate(360deg);
+            opacity: 0;
+          }
+        }
+      `}</style>
+      <Confetti active={showConfetti} />
+      <playSpinSoundConglet active={isSoundLoaded} />
       <audio ref={audioRef} src={Sound}  />
-      <div className="relative xl:w-[34rem] xl:h-[34rem] xl:mt-[21rem] w-80 h-80  ">
+      <div className="relative xl:w-[34rem] xl:h-[34rem] xl:mt-[21rem] w-80 h-80  "
+      
+      >
         <div
           className="absolute inset-0 rounded-full"
           style={{
