@@ -10,6 +10,8 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import Sound from "../public/sound-effect.wav"
+import Gold from "../src/assets/gold.png"
+
 
 const Confetti = ({ active }) => {
   if (!active) return null;
@@ -173,7 +175,7 @@ const Circle = ({ isSpinning, spinDegrees }) => {
       style={{
         transform: `rotate(${spinDegrees}deg)`,
         transition: isSpinning
-          ? "transform 30s cubic-bezier(0.2, 0.8, 0.2, 1)"
+          ? "transform 50s cubic-bezier(0.2, 0.8, 0.2, 1)"
           : "none",
       }}
     >
@@ -211,7 +213,7 @@ const Circle = ({ isSpinning, spinDegrees }) => {
               left: `${x}%`,
               top: `${y}%`,
               transform: `translate(-50%, -50%) rotate(${textAngle}deg)`,
-              fontSize: "0.7rem",
+              fontSize: "1rem",
               fontWeight: "bold",
               color: index % 2 === 0 ? "#fff4e3" : "#e50305",
               textShadow:
@@ -346,7 +348,7 @@ const LuckyWheel = () => {
       const winningIndex = Math.floor(Math.random() * sections.length);
       const sectionSize = 360 / sections.length;
 
-      const spins = 5 + Math.floor(Math.random() * 5);
+      const spins = 15 + Math.floor(Math.random() * 5);
       const targetDegrees =
         360 - winningIndex * sectionSize - sectionSize / 2 - 45;
       const totalDegrees = spins * 360 + targetDegrees;
@@ -363,7 +365,7 @@ const LuckyWheel = () => {
           spinSound.current.pause();
           spinSound.current.currentTime = 0;
         }
-      }, 30000);
+      }, 50000);
     }
     
     
@@ -435,7 +437,7 @@ const LuckyWheel = () => {
         <div
           className="absolute inset-4 rounded-full overflow-hidden shadow-lg"
           style={{
-            border: "4px solid #DAA520",
+            border: "8px solid #DAA520",
             boxShadow: "0 0 15px rgba(218, 165, 32, 0.6)",
           }}
         >
@@ -461,7 +463,7 @@ const LuckyWheel = () => {
             boxShadow: "0 0 15px rgba(218, 165, 32, 0.4)",
           }}
         >
-          <Coins size={24} />
+         <img src={Gold} style={{width:"72px", height:"72px"}} />
         </button>
         <PrizePin />
       </div>
