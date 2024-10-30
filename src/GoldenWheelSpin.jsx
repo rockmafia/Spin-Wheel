@@ -210,7 +210,7 @@ const LuckyWheel = () => {
   const isGameOver = remainingSpins <= 0;
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-red-600 p-4">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-red-600 p-4 ">
       {showConfetti && <Confetti />}
       
       <SpinCounter total={TOTAL_SPINS} remaining={remainingSpins} />
@@ -249,11 +249,11 @@ const LuckyWheel = () => {
         {isGameOver && <p className="text-xl font-bold text-yellow-400 mt-2">เกมสิ้นสุดแล้ว!</p>}
       </div>
 
-      <AlertDialog open={showDialog} onOpenChange={setShowDialog}>
-        <AlertDialogContent>
+      <AlertDialog open={showDialog} onOpenChange={setShowDialog} >
+        <AlertDialogContent className="bg-white rounded-lg	text-black">
           <AlertDialogHeader>
             <AlertDialogTitle>{dialogContent.title}</AlertDialogTitle>
-            <AlertDialogDescription>
+            <AlertDialogDescription className="text-black">
               {dialogContent.description}
             </AlertDialogDescription>
           </AlertDialogHeader>
