@@ -384,7 +384,7 @@ const LuckyWheel = () => {
     <div
       className="flex flex-col items-center justify-center min-h-screen bg-[#1a1a1a] p-4"
       style={{
-        backgroundImage: `url(/BJLuckySpinWheel-new.jpg)`,
+        backgroundImage: `url(/Spin-For-Gold.jpg)`,
         backgroundSize: "auto",
       }}
       onClick={handleUserInteraction}>
@@ -419,7 +419,7 @@ const LuckyWheel = () => {
       <Confetti active={showConfetti} />
       <playSpinSoundConglet active={isSoundLoaded} />
       <audio ref={audioRef} src={Sound}  />
-      <div className="relative lg:w-[44rem] lg:h-[44rem] lg:mt-[40rem] lg:ml-[1rem] xl:w-[34rem] xl:h-[34rem] xl:mt-[21rem] w-80 h-80  "
+      <div className="relative lg:w-[44rem] lg:h-[44rem] lg:mt-[23rem] lg:ml-[1rem] xl:w-[34rem] xl:h-[34rem] xl:mt-[21rem] w-80 h-80  "
       
       >
         <div
