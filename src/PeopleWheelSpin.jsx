@@ -110,7 +110,7 @@ const PrizePin = () => (
       transform: "rotate(45deg)",
     }}
   >
-    <div className="relative xl:w-[10rem] h-12 w-12 ">
+    <div className="relative lg:w-[18rem] xl:w-[10rem] h-12 w-12 ">
       <div
         className="absolute top-0 left-1/2 transform -translate-x-1/2 w-12 h-12 rounded-full"
         style={{
@@ -384,7 +384,7 @@ const LuckyWheel = () => {
     <div
       className="flex flex-col items-center justify-center min-h-screen bg-[#1a1a1a] p-4"
       style={{
-        backgroundImage: `url(/Bjbg.jpg)`,
+        backgroundImage: `url(/Spin-For-Gold.jpg)`,
         backgroundSize: "auto",
       }}
       onClick={handleUserInteraction}>
@@ -419,7 +419,7 @@ const LuckyWheel = () => {
       <Confetti active={showConfetti} />
       <playSpinSoundConglet active={isSoundLoaded} />
       <audio ref={audioRef} src={Sound}  />
-      <div className="relative xl:w-[34rem] xl:h-[34rem] xl:mt-[21rem] w-80 h-80  "
+      <div className="relative lg:w-[44rem] lg:h-[44rem] lg:mt-[23rem] lg:ml-[1rem] xl:w-[34rem] xl:h-[34rem] xl:mt-[21rem] w-80 h-80  "
       
       >
         <div
@@ -437,7 +437,7 @@ const LuckyWheel = () => {
         <div
           className="absolute inset-4 rounded-full overflow-hidden shadow-lg"
           style={{
-            border: "8px solid #DAA520",
+            border: "12px solid #DAA520",
             boxShadow: "0 0 15px rgba(218, 165, 32, 0.6)",
           }}
         >
