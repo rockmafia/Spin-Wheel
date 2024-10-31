@@ -9,6 +9,38 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import Sound from "../public/soundpageone.wav"
+
+
+const Confetti = ({ active }) => {
+  if (!active) return null;
+
+  return (
+    <div className="confetti-container">
+      {[...Array(50)].map((_, i) => (
+        <div
+          key={i}
+          className="confetti"
+          style={{
+            left: `${Math.random() * 100}%`,
+            animationDelay: `${Math.random() * 3}s`,
+            backgroundColor: [][Math.floor(Math.random() * 5)],
+            // backgroundColor: [
+            //   "#ff0000",
+            //   "#00ff00",
+            //   "#0000ff",
+            //   "#ffff00",
+            //   "#ff00ff",
+            // ][Math.floor(Math.random() * 5)]
+          }}
+        >
+          <div className='text-xl'>🟡🟡</div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
 
 const initialPrizes = [
   { id: 1, label: 'คุณได้สิทธิ์ลุ้นรับทองคำ 1 บาท', count: 10, color: '#FFD700', textColor: '#000000', isReal: true },
@@ -34,24 +66,6 @@ const SpinCounter = ({ total, remaining }) => (
   </div>
 );
 
-const Confetti = () => (
-  <div className="fixed inset-0 pointer-events-none z-50">
-    {[...Array(100)].map((_, index) => (
-      <div
-        key={index}
-        className="absolute animate-[confetti-fall_5s_linear_infinite]"
-        style={{
-          left: `${Math.random() * 100}%`,
-          top: `-5%`,
-          animationDelay: `${Math.random() * 5}s`,
-          backgroundColor: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'][Math.floor(Math.random() * 6)],
-          width: '10px',
-          height: '10px'
-        }}
-      />
-    ))}
-  </div>
-);
 
 const LED = ({ index }) => {
   const [isOn, setIsOn] = useState(false);
@@ -104,9 +118,106 @@ const LuckyWheel = () => {
   const [remainingSpins, setRemainingSpins] = useState(TOTAL_SPINS);
   const [showDialog, setShowDialog] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
+  const spinSoundRef = useRef(null);
   const [dialogContent, setDialogContent] = useState({ title: '', description: '' });
   const wheelRef = useRef(null);
+  const spinSoundConglet = useRef(null);
+  const [isSoundLoaded, setIsSoundLoaded] = useState(true);
+  const spinSoundSad = useRef(null);
+  const [isSoundSad, setIsSoundSad] = useState(true);
+  const audioRef = useRef(null);
+  const [hasInteracted, setHasInteracted] = useState(false);
 
+  useEffect(() => {
+    // Create new Audio object for spin sound
+    spinSoundRef.current = new Audio("/spin-sound.mp3"); // ตรวจสอบให้แน่ใจว่าไฟล์เสียงอยู่ในโฟลเดอร์ public
+    
+    // Preload the sound
+    spinSoundRef.current.load();
+    
+    return () => {
+      if (spinSoundRef.current) {
+        spinSoundRef.current.pause();
+        spinSoundRef.current = null;
+      }
+    };
+  }, []);
+
+  const playSpinSound = () => {
+    if (spinSoundRef.current) {
+      spinSoundRef.current.currentTime = 0; // Reset sound to start
+      spinSoundRef.current.play().catch(error => {
+        console.error("Error playing spin sound:", error);
+      });
+    }
+  };
+
+  useEffect(() => {
+    spinSoundConglet.current = new Audio("../sound-conglet.mp3");
+    spinSoundConglet.current.addEventListener("canplaythrough", () =>
+      setIsSoundLoaded(true)
+    );
+    spinSoundConglet.current.addEventListener("error", (e) =>
+      console.error("Error loading sound:", e)
+    );
+
+    return () => {
+      if (spinSoundConglet.current) {
+        spinSoundConglet.current.removeEventListener("canplaythrough", () =>
+          setIsSoundLoaded(true)
+        );
+        spinSoundConglet.current.removeEventListener("error", (e) =>
+          console.error("Error loading sound:", e)
+        );
+      }
+    };
+  }, []);
+
+  const playSpinSoundConglet = () => {
+    if (spinSoundConglet.current && isSoundLoaded) {
+      spinSoundConglet.current.currentTime = 0;
+      spinSoundConglet.current
+        .play()
+        .catch((e) => console.error("Error playing sound:", e));
+    } else {
+      console.warn("Spin sound not loaded yet");
+    }
+  };
+
+  const playSpinSoundSad = () => {
+    if (spinSoundSad.current && isSoundSad) {
+      spinSoundSad.current.currentTime = 0;
+      spinSoundSad.current
+        .play()
+        .catch((e) => console.error("Error playing sound:", e));
+    } else {
+      console.warn("Spin sound not loaded yet");
+    }
+  };
+
+  useEffect(() => {
+    spinSoundSad.current = new Audio("../gameover.wav");
+    spinSoundSad.current.addEventListener("canplaythrough", () =>
+    setIsSoundSad(true)
+    );
+    spinSoundSad.current.addEventListener("error", (e) =>
+      console.error("Error loading sound:", e)
+    );
+
+    return () => {
+      if (spinSoundSad.current) {
+        spinSoundSad.current.removeEventListener("canplaythrough", () =>
+        setIsSoundSad(true)
+        );
+        spinSoundSad.current.removeEventListener("error", (e) =>
+          console.error("Error loading sound:", e)
+        );
+      }
+    };
+  }, []);
+  
+  
+  
   const shouldGiveRealPrize = () => {
     const realPrize = prizes.find(p => p.id === 1);
     const remainingPrizes = realPrize.count;
@@ -123,7 +234,7 @@ const LuckyWheel = () => {
 
   const spin = () => {
     if (spinning || remainingSpins <= 0) return;
-
+    playSpinSound();
     setSpinning(true);
     setRemainingSpins(prevSpins => prevSpins - 1);
 
@@ -157,7 +268,7 @@ const LuckyWheel = () => {
       setResult(selectedPrize.label);
       
       if (selectedPrize.isReal) {
-        setShowConfetti(true);
+        playSpinSoundConglet();
         setDialogContent({
           title: '🎉 ยินดีด้วย! 🎉',
           description: selectedPrize.label
@@ -168,7 +279,9 @@ const LuckyWheel = () => {
             prize.id === 1 ? { ...prize, count: prize.count - 1 } : prize
           )
         );
+        setShowConfetti(true);
       } else {
+        playSpinSoundSad();
         setDialogContent({
           title: '😢 เสียใจด้วย',
           description: selectedPrize.label
@@ -177,6 +290,15 @@ const LuckyWheel = () => {
       
       setShowDialog(true);
     }, 5000);
+  };
+
+  const handleUserInteraction = () => {
+    if (!hasInteracted) {
+      audioRef.current.play().catch(err => {
+        console.error("Error playing background sound:", err);
+      });
+      setHasInteracted(true);
+    }
   };
 
   const renderWheel = () => {
@@ -189,11 +311,11 @@ const LuckyWheel = () => {
           style={{ transform: `rotate(${rotation}deg)` }}
         >
           <div 
-            className="absolute top-0 left-1/2 -translate-x-1/2 w-1 h-1/2"
+            className="absolute top-0 left-1/2 -translate-x-1/2 w-2 h-1/2"
             style={{ backgroundColor: prize.color }}
           ></div>
           <div 
-            className="absolute top-4 left-1/2 -translate-x-1/2 text-xs text-center transform -rotate-90 origin-bottom font-bold whitespace-nowrap p-1 rounded"
+            className="absolute top-4 left-1/2 -translate-x-1/2 text-2xl text-center transform -rotate-90 origin-bottom font-bold whitespace-nowrap p-1 rounded"
             style={{ 
               color: prize.textColor,
               backgroundColor: prize.color,
@@ -215,9 +337,38 @@ const LuckyWheel = () => {
       backgroundImage: `url(/BJLuckySpinWheel-new.jpg)`,
       backgroundSize: "auto",
     }}
+    onClick={handleUserInteraction}
     >
-      {showConfetti && <Confetti />}
-      
+      <style jsx>{`
+        .confetti-container {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          pointer-events: none;
+          z-index: 1000;
+        }
+        .confetti {
+          position: absolute;
+          width: 10px;
+          height: 10px;
+          opacity: 0;
+          animation: fall 3s linear infinite;
+        }
+        @keyframes fall {
+          0% {
+            transform: translateY(-100px) rotate(0deg);
+            opacity: 1;
+          }
+          100% {
+            transform: translateY(100vh) rotate(360deg);
+            opacity: 0;
+          }
+        }
+      `}</style>
+      <Confetti active={showConfetti} />
+      <audio ref={audioRef} src={Sound} loop  />
       <SpinCounter total={TOTAL_SPINS} remaining={remainingSpins} />
       
       <div className="relative w-[43rem] h-[43rem] mb-8 mt-[52rem]">
@@ -241,7 +392,7 @@ const LuckyWheel = () => {
           disabled={spinning || isGameOver}
           className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-yellow-500 hover:bg-yellow-400 text-white p-3 rounded-full z-30 shadow-md transition-all duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          <Coins size={24} />
+          <Coins size={80} />
         </button>
         <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-[20px] border-l-transparent border-r-[20px] border-r-transparent border-b-[40px] border-b-yellow-400"></div>
       </div>
