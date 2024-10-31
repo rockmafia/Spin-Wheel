@@ -1,6 +1,41 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef,useEffect } from 'react';
 import { AlertDialog, AlertDialogAction, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { Coins } from 'lucide-react';
+import Sound from "../public/soundpageone.wav"
+
+
+const Confetti = ({ active }) => {
+  if (!active) return null;
+
+  return (
+    <div className="confetti-container">
+      {[...Array(50)].map((_, i) => (
+        <div
+          key={i}
+          className="confetti"
+          style={{
+            left: `${Math.random() * 100}%`,
+            animationDelay: `${Math.random() * 3}s`,
+            backgroundColor: [][Math.floor(Math.random() * 5)],
+            
+            // backgroundColor: [
+            //   "#ff0000",
+            //   "#00ff00",
+            //   "#0000ff",
+            //   "#ffff00",
+            //   "#ff00ff",
+            // ]
+            
+            // [Math.floor(Math.random() * 5)]
+            
+          }}
+        >
+         <div className="text-6xl">🥇</div> {/* <img src={Coins} /> */}
+        </div>
+      ))}
+    </div>
+  );
+};
 
 export default function SpinningWheelGame() {
   const [spinning, setSpinning] = useState(false);
@@ -26,6 +61,126 @@ export default function SpinningWheelGame() {
     starbucks15: 0,
     voucher1000: 0
   });
+  const spinSoundRef = useRef(null);
+  const spinSound = useRef(null);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const audioRef = useRef(null);
+  const [hasInteracted, setHasInteracted] = useState(false);
+  const spinSoundConglet = useRef(null);
+  const spinSoundSad = useRef(null);
+  const [isSoundLoaded, setIsSoundLoaded] = useState(true);
+  const [isSoundSad, setIsSoundSad] = useState(true);
+
+
+
+
+  useEffect(() => {
+    // Create new Audio object for spin sound
+    spinSoundRef.current = new Audio("/spin-sound.mp3"); // ตรวจสอบให้แน่ใจว่าไฟล์เสียงอยู่ในโฟลเดอร์ public
+    
+    // Preload the sound
+    spinSoundRef.current.load();
+    
+    return () => {
+      if (spinSoundRef.current) {
+        spinSoundRef.current.pause();
+        spinSoundRef.current = null;
+      }
+    };
+  }, []);
+
+  const playSpinSound = () => {
+    if (spinSoundRef.current) {
+      spinSoundRef.current.currentTime = 0; // Reset sound to start
+      spinSoundRef.current.play().catch(error => {
+        console.error("Error playing spin sound:", error);
+      });
+    }
+  };
+  const playSpinSoundConglet = () => {
+    if (spinSoundConglet.current && isSoundLoaded) {
+      spinSoundConglet.current.currentTime = 0;
+      spinSoundConglet.current
+        .play()
+        .catch((e) => console.error("Error playing sound:", e));
+    } else {
+      console.warn("Spin sound not loaded yet");
+    }
+  };
+
+  const playSpinSoundSad = () => {
+    if (spinSoundSad.current && isSoundSad) {
+      spinSoundSad.current.currentTime = 0;
+      spinSoundSad.current
+        .play()
+        .catch((e) => console.error("Error playing sound:", e));
+    } else {
+      console.warn("Spin sound not loaded yet");
+    }
+  };
+  
+  // Reset spin sound after it finishes playing
+  useEffect(() => {
+    if (spinSoundRef.current) {
+      spinSoundRef.current.addEventListener("ended", () => {
+        spinSoundRef.current.currentTime = 0;
+      });
+    }
+    return () => {
+      if (spinSoundRef.current) {
+        spinSoundRef.current.removeEventListener("ended", () => {
+          spinSoundRef.current.currentTime = 0;
+        });
+      }
+    };
+  }, []);
+
+
+
+  useEffect(() => {
+    spinSoundConglet.current = new Audio("../sound-conglet.mp3");
+    spinSoundConglet.current.addEventListener("canplaythrough", () =>
+      setIsSoundLoaded(true)
+    );
+    spinSoundConglet.current.addEventListener("error", (e) =>
+      console.error("Error loading sound:", e)
+    );
+
+    return () => {
+      if (spinSoundConglet.current) {
+        spinSoundConglet.current.removeEventListener("canplaythrough", () =>
+          setIsSoundLoaded(true)
+        );
+        spinSoundConglet.current.removeEventListener("error", (e) =>
+          console.error("Error loading sound:", e)
+        );
+      }
+    };
+  }, []);
+
+
+  useEffect(() => {
+    spinSoundSad.current = new Audio("../gameover.wav");
+    spinSoundSad.current.addEventListener("canplaythrough", () =>
+    setIsSoundSad(true)
+    );
+    spinSoundSad.current.addEventListener("error", (e) =>
+      console.error("Error loading sound:", e)
+    );
+
+    return () => {
+      if (spinSoundSad.current) {
+        spinSoundSad.current.removeEventListener("canplaythrough", () =>
+        setIsSoundSad(true)
+        );
+        spinSoundSad.current.removeEventListener("error", (e) =>
+          console.error("Error loading sound:", e)
+        );
+      }
+    };
+  }, []);
+  
+
 
   const selectPrize = useCallback(() => {
     if (spins < 50) {
@@ -89,10 +244,12 @@ export default function SpinningWheelGame() {
     const selectedIndex = selectPrize();
     if (selectedIndex === -1) {
       setGameOver(true);
+      
       return;
     }
-
+    playSpinSound();
     setSpinning(true);
+    
     setSpins(prevSpins => prevSpins + 1);
 
     const spinDuration = 5000;
@@ -107,13 +264,20 @@ export default function SpinningWheelGame() {
     setTimeout(() => {
       setSpinning(false);
       setShowResult(true);
-      if (prizes[selectedIndex].count !== Infinity) {
-        setPrizes(prevPrizes => 
-          prevPrizes.map((prize, index) => 
-            index === selectedIndex ? { ...prize, count: prize.count - 1 } : prize
-          )
-        );
-        setDistributedPrizes(prev => {
+    
+      // Check if the selected prize is a "losing" option (update as needed based on your prize indexes)
+      if ([3, 5, 7].includes(selectedIndex)) {
+        playSpinSoundSad();
+      } else {
+        // For winning cases, play the congratulatory sound
+        playSpinSoundConglet();
+        setShowConfetti(true);
+        setTimeout(() => {
+          setShowConfetti(false);
+        }, 10000);
+    
+        // Update distributed prizes
+        setDistributedPrizes((prev) => {
           const newDistributed = { ...prev };
           switch (selectedIndex) {
             case 0: newDistributed.starbucks25++; break;
@@ -125,14 +289,29 @@ export default function SpinningWheelGame() {
           return newDistributed;
         });
       }
-      
+    
       if (spins >= 149) {
         setGameOver(true);
       }
       
+      if (spinSound.current) {
+        spinSound.current.pause();
+        spinSound.current.currentTime = 0;
+      }
+    
       wheelRef.current.style.transition = 'none';
       wheelRef.current.style.transform = `rotate(${targetRotation % 360}deg)`;
+    
     }, spinDuration);
+  };
+
+  const handleUserInteraction = () => {
+    if (!hasInteracted) {
+      audioRef.current.play().catch(err => {
+        console.error("Error playing background sound:", err);
+      });
+      setHasInteracted(true);
+    }
   };
 
   return (
@@ -140,7 +319,39 @@ export default function SpinningWheelGame() {
     style={{
       backgroundImage: `url(/BjpinwheelVerone.jpg)`,
       backgroundSize: "auto",
-    }}>
+    }}
+    onClick={handleUserInteraction}
+    >
+      <style jsx>{`
+        .confetti-container {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          pointer-events: none;
+          z-index: 1000;
+        }
+        .confetti {
+          position: absolute;
+          width: 10px;
+          height: 10px;
+          opacity: 0;
+          animation: fall 3s linear infinite;
+        }
+        @keyframes fall {
+          0% {
+            transform: translateY(-100px) rotate(0deg);
+            opacity: 1;
+          }
+          100% {
+            transform: translateY(100vh) rotate(360deg);
+            opacity: 0;
+          }
+        }
+      `}</style>
+      <Confetti active={showConfetti}  />
+      <audio ref={audioRef} src={Sound}  />
       <div className="text-lg mt-[40rem] text-black">จำนวนการหมุน: {spins}</div>
       <div className=" relative" style={{ width: '800px', height: '800px' }}>
         <svg width="800" height="800" viewBox="0 0 400 400">
@@ -266,11 +477,11 @@ export default function SpinningWheelGame() {
             </div>
           ))}
       </div>
-      <AlertDialog open={showResult} onOpenChange={setShowResult}>
-        <AlertDialogContent>
+      <AlertDialog open={showResult} onOpenChange={setShowResult} >
+        <AlertDialogContent className="bg-black text-white">
           <AlertDialogHeader>
             <AlertDialogTitle>ผลรางวัล</AlertDialogTitle>
-            <AlertDialogDescription>
+            <AlertDialogDescription className="text-white" >
               คุณได้รับ: {prizes[prizeIndex].option}
             </AlertDialogDescription>
           </AlertDialogHeader>
