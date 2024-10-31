@@ -17,11 +17,12 @@ createRoot(document.getElementById("root")).render(
           path="/"
           element={
             <>
-              <SpinWheelVerone /> <GoldenWheelSpin />
+              <SpinWheelVerone /> 
             </>
           }
         />
         <Route path="/Peoplegold" element={<PeopleWheelSpin />} />
+        <Route path="Page2" element={<GoldenWheelSpin />}/>
       </Routes>
     </StrictMode>
   </BrowserRouter>

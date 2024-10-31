@@ -26,7 +26,7 @@ const TOTAL_LEDS = 35;
 const BRIGHTER_LEDS = [0, 4, 9, 14, 19, 24, 29, 34];
 
 const SpinCounter = ({ total, remaining }) => (
-  <div className="text-white mb-4 text-center">
+  <div className="text-white mb-4 text-center ">
     <span className="text-lg">จำนวนการหมุน: </span>
     <span className="text-2xl font-bold">
       {total - remaining}
@@ -210,12 +210,17 @@ const LuckyWheel = () => {
   const isGameOver = remainingSpins <= 0;
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-red-600 p-4 ">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-red-600 p-4 "
+    style={{
+      backgroundImage: `url(/BJLuckySpinWheel-new.jpg)`,
+      backgroundSize: "auto",
+    }}
+    >
       {showConfetti && <Confetti />}
       
       <SpinCounter total={TOTAL_SPINS} remaining={remainingSpins} />
       
-      <div className="relative w-96 h-96 mb-8">
+      <div className="relative w-[43rem] h-[43rem] mb-8 mt-[52rem]">
         <div className="absolute inset-0 rounded-full bg-red-700"></div>
         <div 
           className="absolute inset-0 rounded-full"
@@ -241,7 +246,7 @@ const LuckyWheel = () => {
         <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-[20px] border-l-transparent border-r-[20px] border-r-transparent border-b-[40px] border-b-yellow-400"></div>
       </div>
 
-      <div className="text-white text-center">
+      <div className="text-white text-center mt-[40rem]">
         <p className="text-lg font-semibold mb-2">รางวัลที่เหลือ:</p>
         <div className="text-lg">
           คุณได้สิทธิ์ลุ้นรับทองคำ 1 บาท: {prizes[0].count} รางวัล
