@@ -351,7 +351,7 @@ export default function SpinningWheelGame() {
         }
       `}</style>
       <Confetti active={showConfetti}  />
-      <audio ref={audioRef} src={Sound}  />
+      <audio ref={audioRef} src={Sound} loop />
       <div className="text-lg mt-[40rem] text-black">จำนวนการหมุน: {spins}</div>
       <div className=" relative" style={{ width: '800px', height: '800px' }}>
         <svg width="800" height="800" viewBox="0 0 400 400">
