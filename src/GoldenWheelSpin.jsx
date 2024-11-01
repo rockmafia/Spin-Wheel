@@ -90,7 +90,7 @@ const LED = ({ index }) => {
     >
       <div className={`w-full h-full rounded-full ${isBrighter ? 'bg-yellow-200' : 'bg-yellow-300'}`}></div>
       <div 
-        className={`absolute inset-0 rounded-full transition-opacity duration-300 ${isOn ? 'opacity-90' : 'opacity-0'}`}
+        className={`absolute inset-[-0.5rem] rounded-full transition-opacity duration-300  ${isOn ? 'opacity-90 z-10' : 'opacity-0'}`}
         style={{
           backgroundColor: isBrighter ? '#fde68a' : '#fcd34d',
           boxShadow: isBrighter
@@ -371,10 +371,10 @@ const LuckyWheel = () => {
       <audio ref={audioRef} src={Sound} loop  />
       <SpinCounter total={TOTAL_SPINS} remaining={remainingSpins} />
       
-      <div className="relative w-[43rem] h-[43rem] mb-8 mt-[52rem]">
-        <div className="absolute inset-0 rounded-full bg-red-700"></div>
+      <div className="relative w-[43rem] h-[43rem] mb-8 mt-[52rem]  ">
+        <div className="absolute inset-0 rounded-full bg-red-700  "></div>
         <div 
-          className="absolute inset-0 rounded-full"
+          className="absolute inset-0 rounded-full  "
           style={{
             boxShadow: '0 0 40px 20px rgba(255, 215, 0, 0.5), 0 0 60px 30px rgba(255, 165, 0, 0.5), 0 0 80px 40px rgba(255, 69, 0, 0.5), 0 0 100px 50px rgba(255, 0, 0, 0.5)'
           }}
@@ -382,7 +382,7 @@ const LuckyWheel = () => {
         <LEDRing />
         <div 
           ref={wheelRef}
-          className="absolute inset-4 rounded-full border-2 border-yellow-400 overflow-hidden shadow-lg bg-white"
+          className="absolute inset-4 rounded-full border-[0.7rem] border-red-700 overflow-hidden shadow-lg bg-white  "
         >
           {renderWheel()}
         </div>

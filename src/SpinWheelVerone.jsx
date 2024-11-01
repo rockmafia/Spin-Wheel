@@ -279,13 +279,25 @@ export default function SpinningWheelGame() {
         // Update distributed prizes
         setDistributedPrizes((prev) => {
           const newDistributed = { ...prev };
-          switch (selectedIndex) {
-            case 0: newDistributed.starbucks25++; break;
-            case 1: newDistributed.starbucks10++; break;
-            case 2: newDistributed.voucher500++; break;
-            case 4: newDistributed.starbucks15++; break;
-            case 6: newDistributed.voucher1000++; break;
-          }
+          const updatedPrizes = prizes.map((prize, i) => {
+            // สร้างสำเนาของ prize ใหม่เพื่อไม่ให้กระทบค่าของ prize อื่น ๆ
+            let updatedPrize = { ...prize };
+        
+            // ตรวจสอบ index ของรางวัลที่ชนะ และลดจำนวน count หากรางวัลยังเหลืออยู่
+            if (i === selectedIndex && updatedPrize.count > 0) {
+              updatedPrize.count--;  // ลดจำนวนรางวัลที่เหลือใน updatedPrize.count
+              switch (selectedIndex) {
+                case 0: newDistributed.starbucks25++; break;
+                case 1: newDistributed.starbucks10++; break;
+                case 2: newDistributed.voucher500++; break;
+                case 4: newDistributed.starbucks15++; break;
+                case 6: newDistributed.voucher1000++; break;
+              }
+            }
+            return updatedPrize; // คืนค่ารายการรางวัลที่อัปเดต
+          });
+        
+          setPrizes(updatedPrizes);  // อัปเดต prizes ด้วยรายการที่มี count ใหม่
           return newDistributed;
         });
       }
