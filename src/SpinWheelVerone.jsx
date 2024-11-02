@@ -613,11 +613,11 @@ export default function SpinningWheelGame() {
         </svg>
       </div>
       
-      <div className="grid grid-cols-2 gap-4 mt-[50rem] bg-white justify-center">
+      <div className="grid grid-cols-2 gap-4 mt-[30rem] bg-yellow-600 justify-center p-8 rounded-2xl">
         {prizes
           .filter((_, index) => ![3, 5, 7].includes(index))
           .map((prize, index) => (
-            <div key={index} className="bg-white p-2 rounded shadow text-black">
+            <div key={index} className="bg-black p-2 rounded shadow text-white">
               <div>
                 {index + 1}. {prize.option}
               </div>

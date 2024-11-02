@@ -418,9 +418,9 @@ const LuckyWheel = () => {
         <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-[20px] border-l-transparent border-r-[20px] border-r-transparent border-b-[40px] border-b-yellow-400"></div>
       </div>
 
-      <div className="text-white text-center mt-[40rem]">
-        <p className="text-lg font-semibold mb-2">รางวัลที่เหลือ:</p>
-        <div className="text-lg">
+      <div className="text-white text-center mt-[20rem] bg-red-800 p-4 rounded-md">
+        <p className="text-2xl font-semibold mb-2">รางวัลที่เหลือ:</p>
+        <div className="text-4xl">
           คุณได้สิทธิ์ลุ้นรับทองคำ 1 บาท: {prizes[0].count} รางวัล
         </div>
         {isGameOver && <p className="text-xl font-bold text-yellow-400 mt-2">เกมสิ้นสุดแล้ว!</p>}
@@ -435,7 +435,7 @@ const LuckyWheel = () => {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-          <button onClick={() => setShowResult(false)}
+          <button onClick={() => setShowDialog(false)}
               type="button"
               class="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground"
             >
