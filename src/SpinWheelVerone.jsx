@@ -89,6 +89,29 @@ export default function SpinningWheelGame() {
   const [isSoundLoaded, setIsSoundLoaded] = useState(true);
   const [isSoundSad, setIsSoundSad] = useState(true);
 
+
+  const audioContextRef = useRef(null);
+  const gainNodeRef = useRef(null);
+
+  const playSound = async () => {
+    if (!audioContextRef.current) {
+      audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
+      gainNodeRef.current = audioContextRef.current.createGain();
+      gainNodeRef.current.gain.setValueAtTime(0.1, audioContextRef.current.currentTime); // ลดเสียงลง 50%
+
+      const response = await fetch(Sound);
+      const arrayBuffer = await response.arrayBuffer();
+      const audioBuffer = await audioContextRef.current.decodeAudioData(arrayBuffer);
+
+      const source = audioContextRef.current.createBufferSource();
+      source.buffer = audioBuffer;
+      source.connect(gainNodeRef.current);
+      gainNodeRef.current.connect(audioContextRef.current.destination);
+      source.start(0);
+    }
+  };
+
+
   useEffect(() => {
     // Create new Audio object for spin sound
     spinSoundRef.current = new Audio("/spin-sound.mp3"); // ตรวจสอบให้แน่ใจว่าไฟล์เสียงอยู่ในโฟลเดอร์ public
@@ -355,9 +378,7 @@ export default function SpinningWheelGame() {
 
   const handleUserInteraction = () => {
     if (!hasInteracted) {
-      audioRef.current.play().catch((err) => {
-        console.error("Error playing background sound:", err);
-      });
+      playSound(); // เรียกใช้ฟังก์ชันที่เล่นเสียง
       setHasInteracted(true);
     }
   };
