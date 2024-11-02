@@ -415,7 +415,6 @@ const LuckyWheel = () => {
         >
           <Coins size={80} />
         </button>
-        <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-[20px] border-l-transparent border-r-[20px] border-r-transparent border-b-[40px] border-b-yellow-400"></div>
       </div>
 
       <div className="text-white text-center mt-[20rem] bg-red-800 p-4 rounded-md">
