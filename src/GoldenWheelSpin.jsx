@@ -389,7 +389,7 @@ const LuckyWheel = () => {
         }
       `}</style>
       <Confetti active={showConfetti} />
-      <audio ref={audioRef} src={Sound} loop  />
+      {/* <audio ref={audioRef} src={Sound} loop  /> */}
       <SpinCounter total={TOTAL_SPINS} remaining={remainingSpins} />
       
       <div className="relative w-[43rem] h-[43rem] mb-8 mt-[52rem]  ">
@@ -403,7 +403,7 @@ const LuckyWheel = () => {
         <LEDRing />
         <div 
           ref={wheelRef}
-          className="absolute inset-4 rounded-full border-[0.7rem] border-red-700 overflow-hidden shadow-lg bg-white  "
+          className="absolute inset-4 rounded-full overflow-hidden shadow-lg bg-white  "
         >
           {renderWheel()}
         </div>

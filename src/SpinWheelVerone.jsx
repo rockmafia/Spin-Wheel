@@ -97,7 +97,7 @@ export default function SpinningWheelGame() {
     if (!audioContextRef.current) {
       audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
       gainNodeRef.current = audioContextRef.current.createGain();
-      gainNodeRef.current.gain.setValueAtTime(0.1, audioContextRef.current.currentTime); // ลดเสียงลง 50%
+      gainNodeRef.current.gain.setValueAtTime(0.3, audioContextRef.current.currentTime); // ลดเสียงลง 50%
 
       const response = await fetch(Sound);
       const arrayBuffer = await response.arrayBuffer();
@@ -105,6 +105,7 @@ export default function SpinningWheelGame() {
 
       const source = audioContextRef.current.createBufferSource();
       source.buffer = audioBuffer;
+      source.loop = true;
       source.connect(gainNodeRef.current);
       gainNodeRef.current.connect(audioContextRef.current.destination);
       source.start(0);
