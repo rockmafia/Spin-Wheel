@@ -136,7 +136,7 @@ const LuckyWheel = () => {
     if (!audioContextRef.current) {
       audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
       gainNodeRef.current = audioContextRef.current.createGain();
-      gainNodeRef.current.gain.setValueAtTime(0.0, audioContextRef.current.currentTime); // ลดเสียงลง 50%
+      gainNodeRef.current.gain.setValueAtTime(0.5, audioContextRef.current.currentTime); // ลดเสียงลง 50%
 
       const response = await fetch(Sound);
       const arrayBuffer = await response.arrayBuffer();
