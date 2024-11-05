@@ -166,7 +166,7 @@ const Circle = ({ isSpinning, spinDegrees }) => {
     "คุณ น้ำฝน บริษัท KM Interlab",
     "คุณ ชื่นกมล บริษัท KM interlab",
     "คุณ  Napat บริษัท BDF",
-    "คุณ J\nจากบริษัท JJ",
+    "คุณสิริทิพย์ บริษัท Cosmina",
   ];
 
   return (
