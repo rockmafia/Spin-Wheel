@@ -48,7 +48,7 @@ export default function SpinningWheelGame() {
   const [prizeIndex, setPrizeIndex] = useState(0);
   const wheelRef = useRef(null);
   const [prizes, setPrizes] = useState([
-    { option: "บัตร Starbucks", count: 25, color: "#af12a1" },
+    { option: "บัตร Starbucks", count: 50, color: "#af12a1" },
     { option: "บัตร Starbucks", count: 10, color: "#FFFFFF" },
     { option: "Gift Voucher Central 500 บาท", count: 3, color: "#af12a1" },
     {
