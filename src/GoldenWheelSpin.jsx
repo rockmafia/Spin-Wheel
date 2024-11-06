@@ -43,7 +43,7 @@ const Confetti = ({ active }) => {
 
 
 const initialPrizes = [
-  { id: 1, label: 'คุณได้สิทธิ์ลุ้นรับทองคำ 1 บาท', count: 10, color: '#FFD700', textColor: '#000000', isReal: true },
+  { id: 1, label: 'คุณได้สิทธิ์ลุ้นรับทองคำ 1 บาท', count: 0, color: '#FFD700', textColor: '#000000', isReal: true },
   { id: 2, label: 'เสียใจด้วยคุณไม่ได้รับรางวัล', count: Infinity, color: '#000000', textColor: '#FFFFFF', isReal: false },
   { id: 3, label: 'คุณได้สิทธิ์ลุ้นรับทองคำ 1 บาท', count: 0, color: '#FFD700', textColor: '#000000', isReal: false },
   { id: 4, label: 'คุณได้สิทธิ์ลุ้นรับทองคำ 1 บาท', count: 0, color: '#FFD700', textColor: '#000000', isReal: false },
