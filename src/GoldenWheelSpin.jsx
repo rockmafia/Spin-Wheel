@@ -52,7 +52,7 @@ const initialPrizes = [
   { id: 7, label: 'เสียใจด้วยคุณไม่ได้รับรางวัล', count: Infinity, color: '#000000', textColor: '#FFFFFF', isReal: false }
 ];
 
-const TOTAL_SPINS = 40;
+const TOTAL_SPINS = 60;
 const TOTAL_TIME = 6 * 60 * 60;
 const TOTAL_LEDS = 35;
 const BRIGHTER_LEDS = [0, 4, 9, 14, 19, 24, 29, 34];
