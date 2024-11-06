@@ -166,7 +166,7 @@ const Circle = ({ isSpinning, spinDegrees }) => {
     "คุณอรณิชา บริษัท SSUP",
     "คุณพรทิชา บริษัท ILC",
     "คุณมุมิ บริษัท IBJS",
-    "คุณณัฐปภัสร์ บริษัท Beth inter",
+    "คุณณัฐปภัสร์ บริษัท Bryg inter",
   ];
 
   return (
@@ -336,7 +336,7 @@ const LuckyWheel = () => {
     "คุณอรณิชา บริษัท SSUP",
     "คุณพรทิชา บริษัท ILC",
     "คุณมุมิ บริษัท IBJS",
-    "คุณณัฐปภัสร์ บริษัท Beth inter",
+    "คุณณัฐปภัสร์ บริษัท Bryg inter",
   ];
 
   const spinWheel = () => {
