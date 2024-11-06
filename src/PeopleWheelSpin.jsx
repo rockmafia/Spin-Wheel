@@ -157,16 +157,16 @@ const PrizePin = () => (
 
 const Circle = ({ isSpinning, spinDegrees }) => {
   const sections = [
-    "คุณ วลีวัลย์ บริษัท Nanoteach",
-    "คุณ แต้ว บริษัท KA",
-    "คุณ มาลิน บริษัท ลักส์มิน",
-    "คุณ ธนภัสร์นันท์ บริษัท ลักส์มิน",
-    "คุณ ศศิธร บริษัท Skintech",
-    "คุณ บีม บริษัท KM interlab",
-    "คุณ น้ำฝน บริษัท KM Interlab",
-    "คุณ ชื่นกมล บริษัท KM interlab",
-    "คุณ  Napat บริษัท BDF",
-    "คุณสิริทิพย์ บริษัท Cosmina",
+    "คุณ สุทธิดา ชูด้วง บริษัท Siam Natural Product",
+    "คุณ สุธิดา ปกป้อง บริษัท SPC Cosmetics",
+    "คุณ เรณุกา pure derima",
+    "คุณ Sha บริษัท pure derima",
+    "คุณชลิตา ชำพิพงช์ บริษัท PHD cosmetology",
+    "คุณธิดารัตช์ (ออม)บริษัท PHD cosmetology",
+    "คุณอรณิชา บริษัท SSUP",
+    "คุณพรทิชา บริษัท ILC",
+    "คุณมุมิ บริษัท IBJS",
+    "คุณณัฐปภัสร์ บริษัท Beth inter",
   ];
 
   return (
@@ -327,16 +327,16 @@ const LuckyWheel = () => {
   };
 
   const sections = [
-    "คุณ วลีวัลย์ บริษัท Nanoteach",
-    "คุณ แต้ว บริษัท KA",
-    "คุณ มาลิน บริษัท ลักส์มิน",
-    "คุณ ธนภัสร์นันท์ บริษัท ลักส์มิน",
-    "คุณ ศศิธร บริษัท Skintech",
-    "คุณ บีม บริษัท KM interlab",
-    "คุณ น้ำฝน บริษัท KM Interlab",
-    "คุณ ชื่นกมล บริษัท KM interlab",
-    "คุณ  Napat บริษัท BDF",
-    "คุณสิริทิพย์ บริษัท Cosmina",
+    "คุณ สุทธิดา ชูด้วง บริษัท Siam Natural Product",
+    "คุณ สุธิดา ปกป้อง บริษัท SPC Cosmetics",
+    "คุณ เรณุกา pure derima",
+    "คุณ Sha บริษัท pure derima",
+    "คุณชลิตา ชำพิพงช์ บริษัท PHD cosmetology",
+    "คุณธิดารัตช์ (ออม)บริษัท PHD cosmetology",
+    "คุณอรณิชา บริษัท SSUP",
+    "คุณพรทิชา บริษัท ILC",
+    "คุณมุมิ บริษัท IBJS",
+    "คุณณัฐปภัสร์ บริษัท Beth inter",
   ];
 
   const spinWheel = () => {
