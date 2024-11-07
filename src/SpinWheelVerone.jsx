@@ -182,18 +182,18 @@ export default function SpinningWheelGame() {
 
   const [prizeDistribution, setPrizeDistribution] = useState({
     firstPhase: {
-      prize1: 40,  // All 40 prizes in first phase
+      prize1: 0,  // All 40 prizes in first phase
       prize2: 0,   // No prizes in first phase
-      prize3: 2,   // 2 prizes in first phase
+      prize3: 0,   // 2 prizes in first phase
       prize5: 0,   // No prizes in first phase (changed from 10)
       prize7: 1    // 1 prize in first phase
     },
     secondPhase: {
       prize1: 0,   // No prizes in second phase
-      prize2: 20,  // All 20 prizes in second phase
-      prize3: 2,   // 2 prizes in second phase
-      prize5: 20,  // All 20 prizes in second phase (changed from 10)
-      prize7: 1    // 1 prize in second phase
+      prize2: 0,  // All 20 prizes in second phase
+      prize3: 0,   // 2 prizes in second phase
+      prize5: 0,  // All 20 prizes in second phase (changed from 10)
+      prize7: 0    // 1 prize in second phase
     }
   });
 
