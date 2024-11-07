@@ -18,28 +18,18 @@ const Confetti = ({ active }) => {
   if (!active) return null;
   
   return (
-    <div className="confetti-container">
-      {[...Array(50)].map((_, i) => (
+    <div className="fixed inset-0 pointer-events-none z-50">
+      {Array.from({ length: 50 }).map((_, i) => (
         <div
           key={i}
-          className="confetti"
+          className="absolute"
           style={{
             left: `${Math.random() * 100}%`,
             animationDelay: `${Math.random() * 3}s`,
-            backgroundColor: [][Math.floor(Math.random() * 5)],
-
-            // backgroundColor: [
-            //   "#ff0000",
-            //   "#00ff00",
-            //   "#0000ff",
-            //   "#ffff00",
-            //   "#ff00ff",
-            // ]
-
-            // [Math.floor(Math.random() * 5)]
+            animation: "fall 3s linear infinite"
           }}
         >
-          <div className="text-6xl">🥇</div> {/* <img src={Coins} /> */}
+          <div className="text-6xl">🥇</div>
         </div>
       ))}
     </div>
@@ -58,9 +48,10 @@ export default function SpinningWheelGame() {
   const spinSoundRef = useRef(null);
   const spinSoundConglet = useRef(null);
   const [isSoundLoaded, setIsSoundLoaded] = useState(true);
-  const [isSoundSad, setIsSoundSad] = useState(true);
   const spinSoundSad = useRef(null);
+  const [isSoundSad, setIsSoundSad] = useState(true);
   const audioRef = useRef(null);
+
   const audioContextRef = useRef(null);
   const gainNodeRef = useRef(null);
 
@@ -84,33 +75,6 @@ export default function SpinningWheelGame() {
   };
 
 
-  const [prizes] = useState([
-    { option: "บัตร Starbucks", count: 40, color: "#af12a1" },
-    { option: "บัตร Starbucks", count: 20, color: "#FFFFFF" },
-    { option: "Gift Voucher Central 500 บาท", count: 4, color: "#af12a1" },
-    { option: "เสียใจด้วยคุณไม่ได้รับรางวัล", count: Infinity, color: "#FFFFFF" },
-    { option: "บัตร Starbucks", count: 20, color: "#af12a1" },
-    { option: "เสียใจด้วยค่ะ พบกันปีหน้านะคะ", count: Infinity, color: "#FFFFFF" },
-    { option: "Gift Voucher 1000 บาท", count: 2, color: "#af12a1" },
-    { option: "เสียใจด้วยคุณไม่ได้รับรางวัล", count: Infinity, color: "#FFFFFF" }
-  ]);
-
-  const [prizeDistribution, setPrizeDistribution] = useState({
-    firstPhase: {
-      prize1: 40,  // All 40 prizes in first phase
-      prize2: 0,   // No prizes in first phase
-      prize3: 2,   // 2 prizes in first phase
-      prize5: 10,  // 10 prizes in first phase (changed from 1)
-      prize7: 1    // 1 prize in first phase
-    },
-    secondPhase: {
-      prize1: 0,   // No prizes in second phase
-      prize2: 20,  // All 20 prizes in second phase
-      prize3: 2,   // 2 prizes in second phase
-      prize5: 10,  // 10 prizes in second phase (changed from 1)
-      prize7: 1    // 1 prize in second phase
-    }
-  });
 
   useEffect(() => {
     // Create new Audio object for spin sound
@@ -135,6 +99,7 @@ export default function SpinningWheelGame() {
       });
     }
   };
+
   const playSpinSoundConglet = () => {
     if (spinSoundConglet.current && isSoundLoaded) {
       spinSoundConglet.current.currentTime = 0;
@@ -158,6 +123,28 @@ export default function SpinningWheelGame() {
   };
 
   useEffect(() => {
+    spinSoundSad.current = new Audio("../gameover.wav");
+    spinSoundSad.current.addEventListener("canplaythrough", () =>
+      setIsSoundSad(true)
+    );
+    spinSoundSad.current.addEventListener("error", (e) =>
+      console.error("Error loading sound:", e)
+    );
+
+    return () => {
+      if (spinSoundSad.current) {
+        spinSoundSad.current.removeEventListener("canplaythrough", () =>
+          setIsSoundSad(true)
+        );
+        spinSoundSad.current.removeEventListener("error", (e) =>
+          console.error("Error loading sound:", e)
+        );
+      }
+    };
+  }, []);
+  
+
+  useEffect(() => {
     spinSoundConglet.current = new Audio("../sound-conglet.mp3");
     spinSoundConglet.current.addEventListener("canplaythrough", () =>
       setIsSoundLoaded(true)
@@ -178,27 +165,37 @@ export default function SpinningWheelGame() {
     };
   }, []);
 
-  useEffect(() => {
-    spinSoundSad.current = new Audio("../gameover.wav");
-    spinSoundSad.current.addEventListener("canplaythrough", () =>
-      setIsSoundSad(true)
-    );
-    spinSoundSad.current.addEventListener("error", (e) =>
-      console.error("Error loading sound:", e)
-    );
 
-    return () => {
-      if (spinSoundSad.current) {
-        spinSoundSad.current.removeEventListener("canplaythrough", () =>
-          setIsSoundSad(true)
-        );
-        spinSoundSad.current.removeEventListener("error", (e) =>
-          console.error("Error loading sound:", e)
-        );
-      }
-    };
-  }, []);
 
+
+
+  const [prizes] = useState([
+    { option: "บัตร Starbucks", color: "#af12a1" },
+    { option: "บัตร Starbucks", color: "#FFFFFF" },
+    { option: "Gift Voucher Central 500 บาท", color: "#af12a1" },
+    { option: "เสียใจด้วยคุณไม่ได้รับรางวัล", color: "#FFFFFF" },
+    { option: "บัตร Starbucks", color: "#af12a1" },
+    { option: "เสียใจด้วยค่ะ พบกันปีหน้านะคะ", color: "#FFFFFF" },
+    { option: "Gift Voucher 1000 บาท", color: "#af12a1" },
+    { option: "เสียใจด้วยคุณไม่ได้รับรางวัล", color: "#FFFFFF" }
+  ]);
+
+  const [prizeDistribution, setPrizeDistribution] = useState({
+    firstPhase: {
+      prize1: 40,  // All 40 prizes in first phase
+      prize2: 0,   // No prizes in first phase
+      prize3: 2,   // 2 prizes in first phase
+      prize5: 0,   // No prizes in first phase (changed from 10)
+      prize7: 1    // 1 prize in first phase
+    },
+    secondPhase: {
+      prize1: 0,   // No prizes in second phase
+      prize2: 20,  // All 20 prizes in second phase
+      prize3: 2,   // 2 prizes in second phase
+      prize5: 20,  // All 20 prizes in second phase (changed from 10)
+      prize7: 1    // 1 prize in second phase
+    }
+  });
 
   const selectPrize = useCallback(() => {
     if (spins >= TOTAL_SPINS_LIMIT) {
@@ -210,95 +207,103 @@ export default function SpinningWheelGame() {
     const phase = isFirstPhase ? 'firstPhase' : 'secondPhase';
     const distribution = prizeDistribution[phase];
 
-    const random = Math.random();
     const remainingSpins = isFirstPhase ? 
       FIRST_PHASE_LIMIT - spins : 
       TOTAL_SPINS_LIMIT - spins;
 
-    let prize = -1;
+    // Total remaining prizes in this phase
+    const totalPrizes = Object.values(distribution).reduce((a, b) => a + b, 0);
     
-    if (isFirstPhase) {
-      if (distribution.prize1 > 0) {
-        if (random < distribution.prize1 / remainingSpins) {
-          prize = 0;
-          setPrizeDistribution(prev => ({
-            ...prev,
-            firstPhase: { ...prev.firstPhase, prize1: prev.firstPhase.prize1 - 1 }
-          }));
-        }
-      }
-      if (prize === -1 && distribution.prize3 > 0) {
-        if (random < distribution.prize3 / remainingSpins) {
-          prize = 2;
-          setPrizeDistribution(prev => ({
-            ...prev,
-            firstPhase: { ...prev.firstPhase, prize3: prev.firstPhase.prize3 - 1 }
-          }));
-        }
-      }
-      if (prize === -1 && distribution.prize5 > 0) {
-        if (random < distribution.prize5 / remainingSpins) {
-          prize = 4;
-          setPrizeDistribution(prev => ({
-            ...prev,
-            firstPhase: { ...prev.firstPhase, prize5: prev.firstPhase.prize5 - 1 }
-          }));
-        }
-      }
-      if (prize === -1 && distribution.prize7 > 0) {
-        if (random < distribution.prize7 / remainingSpins) {
-          prize = 6;
-          setPrizeDistribution(prev => ({
-            ...prev,
-            firstPhase: { ...prev.firstPhase, prize7: prev.firstPhase.prize7 - 1 }
-          }));
-        }
-      }
-    } else {
-      if (distribution.prize2 > 0) {
-        if (random < distribution.prize2 / remainingSpins) {
-          prize = 1;
-          setPrizeDistribution(prev => ({
-            ...prev,
-            secondPhase: { ...prev.secondPhase, prize2: prev.secondPhase.prize2 - 1 }
-          }));
-        }
-      }
-      if (prize === -1 && distribution.prize3 > 0) {
-        if (random < distribution.prize3 / remainingSpins) {
-          prize = 2;
-          setPrizeDistribution(prev => ({
-            ...prev,
-            secondPhase: { ...prev.secondPhase, prize3: prev.secondPhase.prize3 - 1 }
-          }));
-        }
-      }
-      if (prize === -1 && distribution.prize5 > 0) {
-        if (random < distribution.prize5 / remainingSpins) {
-          prize = 4;
-          setPrizeDistribution(prev => ({
-            ...prev,
-            secondPhase: { ...prev.secondPhase, prize5: prev.secondPhase.prize5 - 1 }
-          }));
-        }
-      }
-      if (prize === -1 && distribution.prize7 > 0) {
-        if (random < distribution.prize7 / remainingSpins) {
-          prize = 6;
-          setPrizeDistribution(prev => ({
-            ...prev,
-            secondPhase: { ...prev.secondPhase, prize7: prev.secondPhase.prize7 - 1 }
-          }));
+    // Force prize selection if we need to ensure distribution
+    if (totalPrizes >= remainingSpins) {
+      const prizeTypes = ['prize1', 'prize2', 'prize3', 'prize5', 'prize7'];
+      const availablePrizes = prizeTypes.filter(type => distribution[type] > 0);
+      
+      if (availablePrizes.length > 0) {
+        const selectedType = availablePrizes[Math.floor(Math.random() * availablePrizes.length)];
+        setPrizeDistribution(prev => ({
+          ...prev,
+          [phase]: {
+            ...prev[phase],
+            [selectedType]: prev[phase][selectedType] - 1
+          }
+        }));
+
+        // Convert prize type to index
+        switch (selectedType) {
+          case 'prize1': return 0;
+          case 'prize2': return 1;
+          case 'prize3': return 2;
+          case 'prize5': return 4;
+          case 'prize7': return 6;
         }
       }
     }
 
-    return prize !== -1 ? prize : [3, 5, 7][Math.floor(Math.random() * 3)];
+    // Normal probability-based selection
+    const random = Math.random() * remainingSpins;
+    let cumulativeProbability = 0;
+
+    if (distribution.prize1 > 0) {
+      cumulativeProbability += distribution.prize1;
+      if (random < cumulativeProbability) {
+        setPrizeDistribution(prev => ({
+          ...prev,
+          [phase]: { ...prev[phase], prize1: prev[phase].prize1 - 1 }
+        }));
+        return 0;
+      }
+    }
+
+    if (distribution.prize2 > 0) {
+      cumulativeProbability += distribution.prize2;
+      if (random < cumulativeProbability) {
+        setPrizeDistribution(prev => ({
+          ...prev,
+          [phase]: { ...prev[phase], prize2: prev[phase].prize2 - 1 }
+        }));
+        return 1;
+      }
+    }
+
+    if (distribution.prize3 > 0) {
+      cumulativeProbability += distribution.prize3;
+      if (random < cumulativeProbability) {
+        setPrizeDistribution(prev => ({
+          ...prev,
+          [phase]: { ...prev[phase], prize3: prev[phase].prize3 - 1 }
+        }));
+        return 2;
+      }
+    }
+
+    if (distribution.prize5 > 0) {
+      cumulativeProbability += distribution.prize5;
+      if (random < cumulativeProbability) {
+        setPrizeDistribution(prev => ({
+          ...prev,
+          [phase]: { ...prev[phase], prize5: prev[phase].prize5 - 1 }
+        }));
+        return 4;
+      }
+    }
+
+    if (distribution.prize7 > 0) {
+      cumulativeProbability += distribution.prize7;
+      if (random < cumulativeProbability) {
+        setPrizeDistribution(prev => ({
+          ...prev,
+          [phase]: { ...prev[phase], prize7: prev[phase].prize7 - 1 }
+        }));
+        return 6;
+      }
+    }
+
+    return [3, 5, 7][Math.floor(Math.random() * 3)];
   }, [spins, prizeDistribution]);
 
   const getTotalRemainingPrizes = (prizeIndex) => {
-    
-    if ([3, 5, 7].includes(prizeIndex)) return "∞" ;
+    if ([3, 5, 7].includes(prizeIndex)) return "∞";
     
     const phase1 = prizeDistribution.firstPhase;
     const phase2 = prizeDistribution.secondPhase;
@@ -314,17 +319,17 @@ export default function SpinningWheelGame() {
   };
 
   const handleSpinClick = () => {
-    if (gameOver || spinning || spins >= TOTAL_SPINS_LIMIT)  return;
-    playSound(); 
+    if (gameOver || spinning || spins >= TOTAL_SPINS_LIMIT) return;
+    playSound();
     const selectedIndex = selectPrize();
-    
     if (selectedIndex === -1) {
       setGameOver(true);
-     
       return;
     }
-    playSpinSound();
+
     setSpinning(true);
+    playSpinSound();
+    
     setSpins(prev => prev + 1);
 
     const spinRotations = 5 + Math.random() * 5;
@@ -337,18 +342,16 @@ export default function SpinningWheelGame() {
     setTimeout(() => {
       setSpinning(false);
       setShowResult(true);
-      
+
       if (![3, 5, 7].includes(selectedIndex)) {
         setShowConfetti(true);
         playSpinSoundConglet();
         setTimeout(() => setShowConfetti(false), 10000);
-        
       }else{
         playSpinSoundSad();
       }
-     
+
       if (spins >= TOTAL_SPINS_LIMIT - 1) {
-       
         setGameOver(true);
       }
 
@@ -364,37 +367,15 @@ export default function SpinningWheelGame() {
       onClick={() => !hasInteracted && setHasInteracted(true)}
     >
       <style jsx>{`
-        .confetti-container {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          pointer-events: none;
-          z-index: 1000;
-        }
-        .confetti {
-          position: absolute;
-          width: 10px;
-          height: 10px;
-          opacity: 0;
-          animation: fall 3s linear infinite;
-        }
         @keyframes fall {
-          0% {
-            transform: translateY(-100px) rotate(0deg);
-            opacity: 1;
-          }
-          100% {
-            transform: translateY(100vh) rotate(360deg);
-            opacity: 0;
-          }
+          0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+          100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
         }
       `}</style>
 
       <Confetti active={showConfetti} />
       <audio ref={audioRef} src={Sound} loop />
-
+      
       <div className="text-lg mt-[40rem] text-black">จำนวนการหมุน: {spins}</div>
       
       <div className="relative w-[800px] h-[800px]">
@@ -492,4 +473,4 @@ export default function SpinningWheelGame() {
       </AlertDialog>
     </div>
   );
-}
+  }
